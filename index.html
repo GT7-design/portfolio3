@@ -7,272 +7,578 @@
   <style>
     :root{
       --primary:#0f766e;
+      --primary-2:#14b8a6;
       --accent:#2563eb;
-      --bg:#f3faf8;
+      --bg:#f4fbfa;
       --card:#ffffff;
-      --line:#cfe7e2;
-      --text:#1f2937;
+      --line:#d8ece8;
+      --text:#0f172a;
       --muted:#64748b;
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:Pretendard,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    body{
+      margin:0;
+      font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(20,184,166,.16), transparent 24%),
+        radial-gradient(circle at 88% 0%, rgba(37,99,235,.10), transparent 20%),
+        linear-gradient(180deg, #f7fffe 0%, #eefbf8 52%, #ffffff 100%);
+      min-height:100vh;
+      position:relative;
+      overflow-x:hidden;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:
+        linear-gradient(rgba(15,118,110,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15,118,110,.05) 1px, transparent 1px);
+      background-size:34px 34px;
+      pointer-events:none;
+      mask-image:linear-gradient(to bottom, rgba(0,0,0,.9), rgba(0,0,0,.25));
+    }
     .hidden{display:none !important}
-    .auth{min-height:100vh;display:grid;place-items:center;padding:24px}
-    .auth-box,.card{background:#fff;border:1px solid var(--line);border-radius:18px}
-    .auth-box{width:min(540px,100%);padding:32px;text-align:center}
-    .logo{width:78px;height:78px;object-fit:contain;margin-bottom:10px}
-    .btn{border:0;border-radius:12px;padding:12px 16px;cursor:pointer;font-weight:700}
-    .btn.primary{background:var(--primary);color:#fff}
-    .btn.secondary{background:#ecfeff;color:var(--primary)}
-    .app{max-width:1320px;margin:0 auto;padding:20px}
-    .header{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:16px}
-    .brand{display:flex;gap:14px;align-items:center}
-    .brand h1{margin:0;font-size:28px}
-    .brand p{margin:4px 0 0;color:#475569}
-    .badge{display:inline-block;background:#ecfeff;color:var(--primary);padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700}
-    .userbox{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .hero{padding:20px}
-    .hero p{color:#475569;line-height:1.7}
-    .mini-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-    .mini-card{padding:14px;border:1px solid var(--line);border-radius:14px;background:#f5fffd}
-    .mini-card strong{display:block;margin-bottom:8px}
-    .mini-card a{color:var(--accent);word-break:break-all}
-    .info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:16px}
-    details.card{padding:14px}
-    details summary{cursor:pointer;font-weight:700}
-    .teacher-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:16px}
-    .teacher-card{padding:14px;text-align:center}
-    .avatar{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;margin:0 auto 10px;background:#dbeafe;color:#1d4ed8;font-weight:800;font-size:20px}
-    .main-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;margin-top:16px}
-    .pane{padding:18px}
+    .login-wrap{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+    .login-card,.card{
+      background:rgba(255,255,255,.9);
+      border:1px solid var(--line);
+      border-radius:28px;
+      backdrop-filter:blur(10px);
+      box-shadow:0 20px 50px rgba(15,118,110,.08);
+    }
+    .login-card{
+      width:min(560px,100%);
+      padding:34px;
+      position:relative;
+      overflow:hidden;
+    }
+    .login-card::after{
+      content:"";
+      position:absolute;
+      right:-40px;
+      bottom:-40px;
+      width:180px;
+      height:180px;
+      background:radial-gradient(circle, rgba(20,184,166,.18), transparent 70%);
+    }
+    .logo{
+      width:96px;
+      height:96px;
+      object-fit:contain;
+      display:block;
+      margin:0 auto 14px;
+      border-radius:24px;
+      background:#fff;
+      border:1px solid #e2f2ef;
+      padding:8px;
+    }
+    .center{display:flex;justify-content:center}
+    .chip{
+      display:inline-flex;
+      padding:8px 12px;
+      border-radius:999px;
+      background:#ecfeff;
+      color:var(--primary);
+      font-weight:800;
+      font-size:13px;
+      border:1px solid #d8f4f4;
+      margin-bottom:16px;
+    }
+    .login-title{
+      text-align:center;
+      font-size:30px;
+      font-weight:900;
+      margin-bottom:8px;
+      letter-spacing:-.03em;
+    }
+    .login-sub{
+      text-align:center;
+      color:var(--muted);
+      line-height:1.7;
+      margin-bottom:24px;
+    }
     .field{margin-bottom:12px}
-    .field label{display:block;font-weight:700;margin-bottom:6px}
-    input,textarea,select{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font:inherit}
-    textarea{min-height:96px;resize:vertical;line-height:1.6}
-    .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-    table{width:100%;border-collapse:collapse;margin-top:12px}
-    th,td{border-bottom:1px solid var(--line);padding:12px;text-align:left;vertical-align:top}
-    th{background:#f0fdfa}
-    .chat-log{height:340px;overflow:auto;border:1px solid var(--line);border-radius:14px;padding:12px;background:#f8fafc}
-    .msg{padding:10px 12px;border-radius:12px;margin-bottom:10px;background:#fff;border:1px solid #e2e8f0;line-height:1.5}
-    .msg small{display:block;color:#64748b;margin-top:6px}
-    .chat-row{display:flex;gap:8px;margin-top:10px}
-    .preview{margin-top:16px}
-    .preview textarea{min-height:170px}
-    .history ul{list-style:none;margin:0;padding:0}
-    .history li{padding:12px;border-bottom:1px solid var(--line);line-height:1.5}
-    footer{margin:20px 0 32px;text-align:center;color:#475569;font-size:14px}
-    @media (max-width: 980px){
-      .main-grid{grid-template-columns:1fr}
-      .form-grid{grid-template-columns:1fr}
-      .header{flex-direction:column;align-items:flex-start}
+    .field label{
+      display:block;
+      margin-bottom:6px;
+      font-size:14px;
+      font-weight:700;
+    }
+    input,select,textarea,button{font:inherit}
+    input,select,textarea{
+      width:100%;
+      padding:13px 14px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fff;
+      color:var(--text);
+    }
+    textarea{
+      min-height:96px;
+      resize:vertical;
+      line-height:1.6;
+    }
+    .btn{
+      border:0;
+      border-radius:14px;
+      padding:13px 16px;
+      cursor:pointer;
+      font-weight:800;
+      transition:.2s ease;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{
+      background:linear-gradient(135deg,var(--primary),var(--primary-2));
+      color:#fff;
+    }
+    .btn-light{
+      background:#f0fdfa;
+      color:var(--primary);
+      border:1px solid #d5efea;
+    }
+    .login-actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+    .notice{
+      margin-top:14px;
+      padding:12px 14px;
+      border-radius:14px;
+      background:#f7fffe;
+      border:1px solid #dff4ef;
+      color:#475569;
+      font-size:13px;
+      line-height:1.6;
+    }
+
+    .app{
+      max-width:1340px;
+      margin:0 auto;
+      padding:24px 18px 40px;
+    }
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+    .brand{
+      display:flex;
+      gap:14px;
+      align-items:center;
+    }
+    .brand-logo{
+      width:76px;
+      height:76px;
+      object-fit:contain;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:6px;
+    }
+    .brand h2{
+      font-size:28px;
+      font-weight:900;
+      letter-spacing:-.02em;
+      margin:0 0 5px;
+    }
+    .brand p{
+      margin:0;
+      color:#475569;
+      line-height:1.55;
+      font-size:14px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:#fff;
+      border:1px solid var(--line);
+      padding:10px 12px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:700;
+      color:#334155;
+    }
+    .hero{
+      background:rgba(255,255,255,.88);
+      border:1px solid var(--line);
+      border-radius:28px;
+      padding:26px;
+      margin-bottom:18px;
+      position:relative;
+      overflow:hidden;
+    }
+    .hero::before{
+      content:"";
+      position:absolute;
+      right:-60px;
+      top:-60px;
+      width:260px;
+      height:260px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(20,184,166,.16), transparent 70%);
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:18px;
+      align-items:center;
+    }
+    .hero h3{
+      font-size:34px;
+      line-height:1.2;
+      letter-spacing:-.03em;
+      margin:0 0 12px;
+    }
+    .hero p{
+      color:#475569;
+      line-height:1.75;
+      font-size:15px;
+      margin:0;
+    }
+    .hero-mark{display:flex;justify-content:center}
+    .hero-mark img{
+      width:min(240px,80%);
+      max-height:240px;
+      object-fit:contain;
+      filter:drop-shadow(0 18px 32px rgba(15,118,110,.14));
+    }
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:14px;
+      margin-bottom:18px;
+    }
+    .card-item{
+      background:rgba(255,255,255,.9);
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:18px;
+    }
+    .card-title{
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:8px;
+      font-weight:700;
+    }
+    .card-value{
+      font-size:15px;
+      font-weight:800;
+      line-height:1.55;
+      word-break:break-all;
+    }
+    .card-value a{
+      color:var(--accent);
+      text-decoration:none;
+    }
+    .teacher-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+      gap:12px;
+      margin-bottom:18px;
+    }
+    .teacher-card{
+      background:rgba(255,255,255,.92);
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:16px;
+      text-align:center;
+    }
+    .avatar{
+      width:58px;
+      height:58px;
+      margin:0 auto 10px;
+      border-radius:18px;
+      background:#e6fffb;
+      border:1px solid #c9f6f0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:900;
+      color:var(--primary);
+      font-size:22px;
+    }
+    .content{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:18px;
+    }
+    .section-title{
+      font-size:22px;
+      font-weight:900;
+      margin-bottom:14px;
+      letter-spacing:-.02em;
+    }
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:14px;
+    }
+    th,td{
+      text-align:left;
+      padding:12px 10px;
+      border-bottom:1px solid #e6f2ef;
+      vertical-align:top;
+      font-size:14px;
+      line-height:1.6;
+    }
+    th{
+      color:#0f766e;
+      font-size:13px;
+      font-weight:800;
+      background:#f4fffd;
+    }
+    .chat-box{
+      border:1px solid #e2efec;
+      background:#f8fffe;
+      border-radius:18px;
+      padding:12px;
+      height:340px;
+      overflow:auto;
+    }
+    .chat-msg{
+      padding:12px 14px;
+      border-radius:16px;
+      margin-bottom:10px;
+      line-height:1.6;
+      font-size:14px;
+      background:#fff;
+      border:1px solid #e2efec;
+    }
+    .chat-row{
+      display:grid;
+      grid-template-columns:1fr 110px;
+      gap:10px;
+      margin-top:12px;
+    }
+    .guide-box{
+      margin-top:16px;
+      padding:14px;
+      border:1px solid #d9ece8;
+      border-radius:18px;
+      background:#f9fffe;
+    }
+    .guide-box textarea{
+      min-height:180px;
+      margin-top:10px;
+    }
+    .history-list{
+      list-style:none;
+      padding:0;
+      margin:14px 0 0;
+    }
+    .history-list li{
+      padding:12px 0;
+      border-bottom:1px solid #e6f2ef;
+      line-height:1.6;
+      font-size:14px;
+    }
+    .small{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:10px;
+      line-height:1.5;
+    }
+    @media (max-width: 1080px){
+      .cards{grid-template-columns:repeat(2,1fr)}
+      .content{grid-template-columns:1fr}
+      .hero-grid{grid-template-columns:1fr}
+    }
+    @media (max-width: 720px){
+      .cards,.teacher-grid{grid-template-columns:1fr}
+      .form-grid,.login-actions,.chat-row{grid-template-columns:1fr}
+      .brand h2{font-size:24px}
+      .hero h3{font-size:28px}
     }
   </style>
 </head>
 <body>
-  <div id="authScreen" class="auth">
-    <div class="auth-box">
-      <img src="logo.png" alt="서울풍납초등학교 로고" class="logo" onerror="this.style.display='none'">
-      <h1>서울풍납초등학교 스마트 보결 배정 시스템</h1>
-      <p>소속학교: 서울풍납초등학교 / 작성자: 교사 김규태</p>
-      <p>
-        보결 수업 매칭, 교사 비상 연락망, 실시간 채팅, 단원·차시·활동 안내문 작성 기능을 한 화면에 담은 시연 서비스입니다.
-      </p>
-      <button id="loginBtn" class="btn primary">Google 계정으로 인증하고 입장</button>
-      <p style="margin-top:12px;color:#64748b;">실제 제출용은 Firebase 연결 후 배포 URL에서 확인하세요.</p>
+  <div id="loginScreen" class="login-wrap">
+    <div class="login-card">
+      <img id="loginLogo" class="logo" alt="풍납초 로고">
+      <div class="center"><div class="chip">서울풍납초등학교 · 교직원 전용 인증 화면</div></div>
+      <div class="login-title">스마트 보결 배정 시스템</div>
+      <div class="login-sub">
+        서울풍납초등학교 교사 <strong>김규태</strong> 포트폴리오 3<br>
+        결강·보강 상황에서 보결 가능 교사, 연락처, 안내문, 채팅까지 한 번에 처리하는 서비스입니다.
+      </div>
+
+      <div class="field">
+        <label for="loginEmail">Google 계정 이메일</label>
+        <input id="loginEmail" type="email" placeholder="예: teacher@sen.go.kr">
+      </div>
+
+      <div class="login-actions">
+        <button class="btn btn-primary" onclick="login()">Google 계정으로 인증</button>
+        <button class="btn btn-light" onclick="fillDemo()">시연용 계정 자동 입력</button>
+      </div>
+
+      <div class="notice">
+        실제 서비스에서는 교직원 계정 인증과 데이터 저장을 연동할 수 있고,
+        현재 버전은 제출용 시연 페이지로 바로 보이도록 구성했습니다.
+      </div>
     </div>
   </div>
 
-  <div id="appShell" class="app hidden">
-    <div class="header">
+  <div id="appScreen" class="app hidden">
+    <div class="topbar">
       <div class="brand">
-        <img src="logo.png" alt="서울풍납초등학교 로고" class="logo" onerror="this.style.display='none'">
+        <img id="brandLogo" class="brand-logo" alt="풍납초 로고">
         <div>
-          <span class="badge">소속학교: 서울풍납초등학교</span>
-          <h1>스마트 보결 배정 시스템</h1>
-          <p>작성자: 서울풍납초등학교 교사 김규태</p>
+          <h2>서울풍납초등학교 스마트 보결 배정 시스템</h2>
+          <p>작성자: 서울풍납초등학교 교사 김규태<br>보결 가능 교사 추천, 긴급 연락, 수업 안내문 생성, 교사 채팅을 통합한 서비스</p>
         </div>
       </div>
-      <div class="userbox">
-        <span id="backendBadge" class="badge">백엔드 확인 중</span>
-        <span id="userInfo" class="badge">로그인 정보 없음</span>
-        <button id="logoutBtn" class="btn secondary">로그아웃</button>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <div class="pill" id="userPill">로그인 전</div>
+        <button class="btn btn-light" onclick="logout()">로그아웃</button>
       </div>
     </div>
 
-    <section class="card hero">
-      <h2>서비스 소개</h2>
-      <p>
-        결강이 발생했을 때 보결 가능 교사를 빠르게 확인하고, 단원명·차시·활동·유의사항을 한 번에 정리해 전달하는 서비스입니다.
-        실시간 채팅을 통해 보강 가능 여부를 신속하게 소통할 수 있도록 구성했습니다.
-      </p>
-      <div class="mini-grid">
-        <div class="mini-card">
-          <strong>GitHub 레포지토리 주소</strong>
-          <a id="repoLink" href="#" target="_blank" rel="noopener"></a>
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <h3>결강 상황에서도<br>수업 흐름이 끊기지 않도록</h3>
+          <p>
+            갑작스러운 병가나 출장 상황에서 보결 가능 교사를 빠르게 확인하고,
+            단원명, 차시, 활동, 유의사항을 한 번에 정리해 전달할 수 있도록 설계했습니다.
+            교사 간 실시간 채팅 형태도 함께 보여주는 포트폴리오입니다.
+          </p>
         </div>
-        <div class="mini-card">
-          <strong>프론트엔드 웹주소</strong>
-          <a id="deployLink" href="#" target="_blank" rel="noopener"></a>
-        </div>
-        <div class="mini-card">
-          <strong>Firebase 백엔드</strong>
-          <span id="backendText"></span>
-        </div>
-        <div class="mini-card">
-          <strong>문의처</strong>
-          <span>서울풍납초등학교 교사 김규태 / 교내 문의</span>
+        <div class="hero-mark">
+          <img id="heroLogo" alt="풍납초 로고">
         </div>
       </div>
     </section>
 
-    <section class="info-grid">
-      <details class="card" open>
-        <summary>개인정보처리방침</summary>
-        <p>
-          수집 항목: 로그인 계정 이름, 이메일, 결강 교사명, 보결 요청 내용, 교사 채팅 메시지.<br>
-          이용 목적: 보결 매칭, 수업 안내 공유, 업무 기록 확인.<br>
-          보관 기간: 시연용 예시 기준 90일.<br>
-          문의처: 서울풍납초등학교 교사 김규태.
-        </p>
-      </details>
-      <details class="card">
-        <summary>사용약관</summary>
-        <p>
-          본 서비스는 학교 보결 업무 지원을 위한 시연용입니다.<br>
-          허위 정보 입력, 타인 비방, 개인정보 오입력을 금지합니다.<br>
-          시스템 정책과 기능은 운영 상황에 따라 변경될 수 있습니다.
-        </p>
-      </details>
-      <details class="card">
-        <summary>사용방법 안내</summary>
-        <p>
-          1) 로그인 후 결강 정보와 수업 정보를 입력합니다.<br>
-          2) 추천 교사를 확인합니다.<br>
-          3) 자동 생성된 보결 안내문을 복사하거나 채팅창에 공유합니다.<br>
-          4) 실시간 채팅으로 보강 가능 여부를 확인합니다.
-        </p>
-      </details>
-      <details class="card">
-        <summary>배포 완료 확인</summary>
-        <p>
-          □ 로그인 가능<br>
-          □ 교사 연락망 표시 확인<br>
-          □ 추천 교사 테이블 표시 확인<br>
-          □ 실시간 채팅 동작 확인<br>
-          □ 안내문 복사 기능 확인
-        </p>
-      </details>
+    <section class="cards">
+      <div class="card-item">
+        <div class="card-title">소속학교 · 작성자</div>
+        <div class="card-value">서울풍납초등학교<br>교사 김규태</div>
+      </div>
+      <div class="card-item">
+        <div class="card-title">GitHub 레포지토리 주소</div>
+        <div class="card-value"><a id="repoLink" target="_blank"></a></div>
+      </div>
+      <div class="card-item">
+        <div class="card-title">배포 주소</div>
+        <div class="card-value"><a id="deployLink" target="_blank"></a></div>
+      </div>
+      <div class="card-item">
+        <div class="card-title">핵심 기능</div>
+        <div class="card-value">교직원 인증 · 보결 추천 · 실시간 채팅 · 안내문 생성</div>
+      </div>
     </section>
 
-    <section class="teacher-strip" id="teacherStrip"></section>
+    <section class="teacher-grid" id="teacherGrid"></section>
 
-    <section class="main-grid">
-      <div class="card pane">
-        <h2 style="margin-top:0;">보결 요청서 작성</h2>
+    <section class="content">
+      <div class="card" style="padding:18px;">
+        <div class="section-title">보결 요청서 작성</div>
         <div class="form-grid">
           <div class="field">
-            <label for="absentTeacher">결강 교사</label>
+            <label>결강 교사</label>
             <input id="absentTeacher" type="text" placeholder="예: 박국어 선생님">
           </div>
           <div class="field">
-            <label for="period">교시</label>
+            <label>교시</label>
             <select id="period">
-              <option value="1교시">1교시</option>
-              <option value="2교시">2교시</option>
-              <option value="3교시">3교시</option>
-              <option value="4교시">4교시</option>
-              <option value="5교시">5교시</option>
-              <option value="6교시">6교시</option>
+              <option>1교시</option>
+              <option>2교시</option>
+              <option>3교시</option>
+              <option>4교시</option>
+              <option>5교시</option>
+              <option>6교시</option>
             </select>
           </div>
-        </div>
-
-        <div class="form-grid">
           <div class="field">
-            <label for="className">학급</label>
+            <label>학급</label>
             <input id="className" type="text" placeholder="예: 5학년 2반">
           </div>
           <div class="field">
-            <label for="subject">교과</label>
+            <label>교과</label>
             <input id="subject" type="text" placeholder="예: 과학">
           </div>
-        </div>
-
-        <div class="form-grid">
           <div class="field">
-            <label for="unitName">단원명</label>
+            <label>단원명</label>
             <input id="unitName" type="text" placeholder="예: 4단원 화산과 지진">
           </div>
           <div class="field">
-            <label for="lessonNo">차시</label>
+            <label>차시</label>
             <input id="lessonNo" type="text" placeholder="예: 3/10차시">
           </div>
         </div>
-
         <div class="field">
-          <label for="activities">해야 할 활동</label>
+          <label>해야 할 활동</label>
           <textarea id="activities" placeholder="예: 실험관찰 24쪽 풀이, 모둠별 관찰 결과 정리"></textarea>
         </div>
-
         <div class="field">
-          <label for="cautions">유의사항</label>
+          <label>유의사항</label>
           <textarea id="cautions" placeholder="예: 모둠 실험 안전지도, 교과서 72쪽까지 진행"></textarea>
         </div>
+        <button class="btn btn-primary" onclick="submitRequest()">보결 가능 교사 추천</button>
 
-        <button class="btn primary" onclick="submitRequest()">추천 교사 찾기 및 요청 저장</button>
+        <div id="matchArea"></div>
 
-        <div id="matchArea" style="margin-top:18px;"></div>
-
-        <div class="preview">
-          <h3>자동 생성 안내문</h3>
-          <textarea id="guidePreview" readonly placeholder="보결 요청서를 작성하면 이곳에 안내문이 자동 생성됩니다."></textarea>
-          <div style="margin-top:10px;">
-            <button class="btn secondary" onclick="copyGuide()">안내문 복사</button>
+        <div class="guide-box">
+          <strong>자동 생성 안내문</strong>
+          <textarea id="guideText" readonly placeholder="보결 요청서를 작성하면 이곳에 수업 안내문이 자동 생성됩니다."></textarea>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+            <button class="btn btn-light" onclick="copyGuide()">안내문 복사</button>
+            <button class="btn btn-light" onclick="shareGuideToChat()">채팅창에 공유</button>
           </div>
         </div>
 
-        <div class="history" style="margin-top:18px;">
-          <h3>최근 보결 요청 기록</h3>
-          <ul id="historyList"></ul>
-        </div>
+        <div class="section-title" style="font-size:18px; margin-top:18px;">최근 보결 요청 기록</div>
+        <ul id="historyList" class="history-list"></ul>
       </div>
 
-      <div class="card pane">
-        <h2 style="margin-top:0;">교사 실시간 채팅</h2>
-        <div id="chatLog" class="chat-log"></div>
+      <div class="card" style="padding:18px;">
+        <div class="section-title">교사 실시간 채팅</div>
+        <div id="chatBox" class="chat-box"></div>
         <div class="chat-row">
           <input id="chatInput" type="text" placeholder="예: 3교시 보강 가능합니다." onkeydown="if(event.key==='Enter'){sendChat()}">
-          <button class="btn primary" onclick="sendChat()">전송</button>
+          <button class="btn btn-primary" onclick="sendChat()">전송</button>
+        </div>
+        <div class="small">
+          브라우저 저장 기반 시연형 채팅입니다. 보결 요청을 등록하면 시스템 메시지도 자동으로 추가됩니다.
         </div>
       </div>
     </section>
-
-    <footer>
-      소속학교: 서울풍납초등학교 | 이름: 김규태 | GitHub 공개 저장소와 배포 URL을 포함한 포트폴리오 3
-    </footer>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
   <script>
-    const APP_INFO = {
-      repoUrl: "https://github.com/깃허브아이디/pungnap-portfolio-3",
-      deployUrl: "https://pungnap-portfolio-3.vercel.app",
-      allowedDomains: ["sen.go.kr", "school.kr"]
+    const CONFIG = {
+      SCHOOL: "서울풍납초등학교",
+      AUTHOR: "교사 김규태",
+      LOGO_URL: "https://images.wrks.ai/dalle/gnShJUSiEOpgut4YKCDQa7SBTtjlbc4ylN3xc9Cz.png",
+      GITHUB_USER: "kimgyutae",
+      REPO_NAME: "pungnap-portfolio-3",
+      DEPLOY_URL: "https://pungnap-portfolio-3.vercel.app",
+      ALLOWED_DOMAINS: ["sen.go.kr", "school.kr", "edu.sen.go.kr"]
     };
 
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT.firebasestorage.app",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID",
-      databaseURL: "https://YOUR_PROJECT-default-rtdb.asia-southeast1.firebasedatabase.app"
-    };
+    const REPO_URL = `https://github.com/${CONFIG.GITHUB_USER}/${CONFIG.REPO_NAME}`;
+    const LOGIN_KEY = "pungnap_portfolio3_login";
+    const REQUEST_KEY = "pungnap_portfolio3_requests";
+    const CHAT_KEY = "pungnap_portfolio3_chat";
 
     const TEACHERS = [
       { name:"김수학", phone:"010-1111-2201", subject:"수학", free:["2교시","4교시"], avatar:"김" },
@@ -283,159 +589,139 @@
       { name:"한창체", phone:"010-1111-2206", subject:"창체", free:["2교시","6교시"], avatar:"한" }
     ];
 
-    const FIREBASE_READY =
-      window.firebase &&
-      firebaseConfig.apiKey &&
-      !String(firebaseConfig.apiKey).includes("YOUR_");
-
-    let auth = null;
-    let db = null;
-    let rtdb = null;
-    let currentUser = null;
-    let chatBound = false;
-
-    if (FIREBASE_READY) {
-      firebase.initializeApp(firebaseConfig);
-      auth = firebase.auth();
-      db = firebase.firestore();
-      rtdb = firebase.database();
+    function setLogos(){
+      document.getElementById("loginLogo").src = CONFIG.LOGO_URL;
+      document.getElementById("brandLogo").src = CONFIG.LOGO_URL;
+      document.getElementById("heroLogo").src = CONFIG.LOGO_URL;
     }
 
-    function qs(id){ return document.getElementById(id); }
-    function esc(v){ return String(v || "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m])); }
-    function two(n){ return String(n).padStart(2, "0"); }
-    function fmt(ts){
-      const d = new Date(ts);
-      return d.getFullYear()+"-"+two(d.getMonth()+1)+"-"+two(d.getDate())+" "+two(d.getHours())+":"+two(d.getMinutes());
-    }
-    function allowedEmail(email){
-      if (!email) return false;
-      return APP_INFO.allowedDomains.some(d => email.toLowerCase().endsWith("@" + d.replace("@","").toLowerCase()));
-    }
-    function localGet(key){
-      try { return JSON.parse(localStorage.getItem(key) || "[]"); } catch(e){ return []; }
-    }
-    function localSet(key, value){
-      localStorage.setItem(key, JSON.stringify(value));
+    function setLinks(){
+      const repoLink = document.getElementById("repoLink");
+      const deployLink = document.getElementById("deployLink");
+      repoLink.href = REPO_URL;
+      repoLink.textContent = REPO_URL;
+      deployLink.href = CONFIG.DEPLOY_URL;
+      deployLink.textContent = CONFIG.DEPLOY_URL;
     }
 
-    function setMeta(){
-      qs("repoLink").href = APP_INFO.repoUrl;
-      qs("repoLink").textContent = APP_INFO.repoUrl;
-      qs("deployLink").href = APP_INFO.deployUrl;
-      qs("deployLink").textContent = APP_INFO.deployUrl;
-      qs("backendBadge").textContent = FIREBASE_READY ? "Firebase 연동 모드" : "시연 모드";
-      qs("backendText").textContent = FIREBASE_READY
-        ? "Authentication + Firestore + Realtime Database 사용"
-        : "Firebase 미설정 시 LocalStorage 시연 모드로 동작";
+    function fillDemo(){
+      document.getElementById("loginEmail").value = "teacher@sen.go.kr";
+    }
+
+    function login(){
+      const email = document.getElementById("loginEmail").value.trim();
+      if(!email || !email.includes("@")){
+        alert("Google 계정 이메일을 입력해주세요.");
+        return;
+      }
+      const domain = email.split("@")[1].toLowerCase();
+      if(!CONFIG.ALLOWED_DOMAINS.includes(domain)){
+        alert("시연용 기준 허용 도메인은 @sen.go.kr, @school.kr, @edu.sen.go.kr 입니다.");
+        return;
+      }
+      sessionStorage.setItem(LOGIN_KEY, email);
+      openApp(email);
+    }
+
+    function logout(){
+      sessionStorage.removeItem(LOGIN_KEY);
+      document.getElementById("appScreen").classList.add("hidden");
+      document.getElementById("loginScreen").classList.remove("hidden");
+    }
+
+    function openApp(email){
+      document.getElementById("loginScreen").classList.add("hidden");
+      document.getElementById("appScreen").classList.remove("hidden");
+      document.getElementById("userPill").textContent = `인증 계정: ${email}`;
+      renderTeachers();
+      renderHistory();
+      initChat();
     }
 
     function renderTeachers(){
-      qs("teacherStrip").innerHTML = TEACHERS.map(t => `
-        <div class="card teacher-card">
-          <div class="avatar">${esc(t.avatar)}</div>
-          <strong>${esc(t.name)}</strong><br>
-          <span style="color:#475569">${esc(t.subject)}</span><br>
-          <span style="color:#2563eb">${esc(t.phone)}</span><br>
-          <span style="color:#64748b">공강: ${esc(t.free.join(", "))}</span>
+      const wrap = document.getElementById("teacherGrid");
+      wrap.innerHTML = TEACHERS.map(t => `
+        <div class="teacher-card">
+          <div class="avatar">${t.avatar}</div>
+          <strong>${t.name}</strong><br>
+          <span style="color:#0f766e; font-weight:700;">${t.subject}</span><br>
+          <span style="color:#2563eb;">${t.phone}</span><br>
+          <span style="color:#64748b; font-size:13px;">공강: ${t.free.join(", ")}</span>
         </div>
       `).join("");
     }
 
-    function showApp(user){
-      currentUser = user;
-      qs("authScreen").classList.add("hidden");
-      qs("appShell").classList.remove("hidden");
-      qs("userInfo").textContent = (user.displayName || "사용자") + " / " + (user.email || "demo@local");
-      renderTeachers();
-      loadHistory();
-      bindChat();
+    function getRequests(){
+      return JSON.parse(localStorage.getItem(REQUEST_KEY) || "[]");
     }
 
-    function showAuth(){
-      qs("appShell").classList.add("hidden");
-      qs("authScreen").classList.remove("hidden");
+    function saveRequests(list){
+      localStorage.setItem(REQUEST_KEY, JSON.stringify(list));
     }
 
-    async function login(){
-      if (!FIREBASE_READY) {
-        showApp({ displayName: "김규태(시연)", email: "demo@school.local" });
-        return;
-      }
-      try {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        provider.setCustomParameters({ prompt: "select_account" });
-        const result = await auth.signInWithPopup(provider);
-        if (!allowedEmail(result.user.email)) {
-          await auth.signOut();
-          alert("허용된 학교/교육청 계정으로만 접속할 수 있습니다.");
-          return;
-        }
-        await db.collection("portfolio3_accessLogs").add({
-          email: result.user.email,
-          name: result.user.displayName || "",
-          createdAtMs: Date.now()
-        });
-        showApp(result.user);
-      } catch (e) {
-        alert("로그인 중 오류가 발생했습니다: " + e.message);
-      }
+    function getChats(){
+      return JSON.parse(localStorage.getItem(CHAT_KEY) || "[]");
     }
 
-    async function logout(){
-      if (FIREBASE_READY && auth) await auth.signOut();
-      showAuth();
+    function saveChats(list){
+      localStorage.setItem(CHAT_KEY, JSON.stringify(list));
     }
 
     function recommendTeachers(subject, period){
       return TEACHERS
         .filter(t => t.free.includes(period))
-        .sort((a, b) => {
+        .sort((a,b) => {
           const aScore = a.subject === subject ? 1 : 0;
           const bScore = b.subject === subject ? 1 : 0;
           return bScore - aScore;
         });
     }
 
-    async function submitRequest(){
-      const absentTeacher = qs("absentTeacher").value.trim();
-      const period = qs("period").value;
-      const className = qs("className").value.trim();
-      const subject = qs("subject").value.trim();
-      const unitName = qs("unitName").value.trim();
-      const lessonNo = qs("lessonNo").value.trim();
-      const activities = qs("activities").value.trim();
-      const cautions = qs("cautions").value.trim();
+    function submitRequest(){
+      const absentTeacher = document.getElementById("absentTeacher").value.trim();
+      const period = document.getElementById("period").value;
+      const className = document.getElementById("className").value.trim();
+      const subject = document.getElementById("subject").value.trim();
+      const unitName = document.getElementById("unitName").value.trim();
+      const lessonNo = document.getElementById("lessonNo").value.trim();
+      const activities = document.getElementById("activities").value.trim();
+      const cautions = document.getElementById("cautions").value.trim();
 
-      if (!absentTeacher || !className || !subject || !unitName || !lessonNo || !activities) {
+      if(!absentTeacher || !className || !subject || !unitName || !lessonNo || !activities){
         alert("필수 항목을 모두 입력해주세요.");
         return;
       }
 
       const matches = recommendTeachers(subject, period);
-      qs("matchArea").innerHTML = matches.length ? `
-        <h3>추천 교사</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>교사</th>
-              <th>교과</th>
-              <th>연락처</th>
-              <th>공강</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${matches.map(t => `
+      const matchArea = document.getElementById("matchArea");
+
+      if(matches.length){
+        matchArea.innerHTML = `
+          <div class="section-title" style="font-size:18px; margin-top:18px;">추천 보결 가능 교사</div>
+          <table>
+            <thead>
               <tr>
-                <td>${esc(t.name)}</td>
-                <td>${esc(t.subject)}</td>
-                <td>${esc(t.phone)}</td>
-                <td>${esc(t.free.join(", "))}</td>
+                <th>교사</th>
+                <th>교과</th>
+                <th>연락처</th>
+                <th>공강 시간</th>
               </tr>
-            `).join("")}
-          </tbody>
-        </table>
-      ` : "<p>해당 교시에 추천 가능한 교사가 없습니다.</p>";
+            </thead>
+            <tbody>
+              ${matches.map(t => `
+                <tr>
+                  <td>${t.name}</td>
+                  <td>${t.subject}</td>
+                  <td>${t.phone}</td>
+                  <td>${t.free.join(", ")}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `;
+      } else {
+        matchArea.innerHTML = `<div class="section-title" style="font-size:18px; margin-top:18px;">추천 결과</div><p>해당 교시에 추천 가능한 교사가 없습니다.</p>`;
+      }
 
       const guide = `[보결 수업 안내]
 결강 교사: ${absentTeacher}
@@ -448,123 +734,107 @@
 유의사항: ${cautions || "없음"}
 작성자: 서울풍납초등학교 교사 김규태`;
 
-      qs("guidePreview").value = guide;
+      document.getElementById("guideText").value = guide;
 
-      const record = {
-        absentTeacher,
-        className,
-        period,
-        subject,
-        unitName,
-        lessonNo,
-        activities,
-        cautions,
-        guide,
-        createdBy: currentUser ? (currentUser.displayName || currentUser.email) : "시연 사용자",
-        createdAtMs: Date.now()
-      };
-
-      if (FIREBASE_READY) {
-        await db.collection("portfolio3_requests").add(record);
-      } else {
-        const arr = localGet("p3_requests");
-        arr.unshift(record);
-        localSet("p3_requests", arr.slice(0, 20));
-      }
-
-      addChat({
-        author: "시스템",
-        text: `${absentTeacher} / ${className} / ${period} 보결 요청이 등록되었습니다. 단원: ${unitName} ${lessonNo}`,
-        ts: Date.now()
+      const list = getRequests();
+      list.unshift({
+        absentTeacher, className, period, subject, unitName, lessonNo,
+        createdAt: new Date().toLocaleString("ko-KR")
       });
+      saveRequests(list.slice(0, 10));
+      renderHistory();
 
-      loadHistory();
+      addChat("시스템", `${absentTeacher} 선생님의 ${className} ${period} 보결 요청이 등록되었습니다. (${unitName} ${lessonNo})`);
     }
 
-    async function loadHistory(){
-      let rows = [];
-      if (FIREBASE_READY) {
-        const snap = await db.collection("portfolio3_requests").orderBy("createdAtMs", "desc").limit(8).get();
-        rows = snap.docs.map(doc => doc.data());
-      } else {
-        rows = localGet("p3_requests");
+    function renderHistory(){
+      const list = getRequests();
+      const ul = document.getElementById("historyList");
+      if(!list.length){
+        ul.innerHTML = "<li>아직 보결 요청 기록이 없습니다.</li>";
+        return;
       }
-      qs("historyList").innerHTML = rows.length
-        ? rows.map(r => `<li><strong>${esc(r.absentTeacher)}</strong> / ${esc(r.className)} / ${esc(r.period)} / ${esc(r.subject)}<br><span style="color:#64748b">${esc(r.unitName)} ${esc(r.lessonNo)}</span></li>`).join("")
-        : "<li>아직 보결 요청 기록이 없습니다.</li>";
+      ul.innerHTML = list.map(item => `
+        <li>
+          <strong>${item.absentTeacher}</strong> · ${item.className} · ${item.period}<br>
+          ${item.subject} / ${item.unitName} / ${item.lessonNo}<br>
+          <span style="color:#64748b;">${item.createdAt}</span>
+        </li>
+      `).join("");
     }
 
-    async function copyGuide(){
-      const text = qs("guidePreview").value.trim();
-      if (!text) {
+    function copyGuide(){
+      const text = document.getElementById("guideText").value.trim();
+      if(!text){
         alert("먼저 보결 요청서를 작성해주세요.");
         return;
       }
-      await navigator.clipboard.writeText(text);
-      alert("안내문을 복사했습니다.");
+      navigator.clipboard.writeText(text).then(() => {
+        alert("안내문을 복사했습니다.");
+      });
     }
 
-    function bindChat(){
-      if (chatBound) return;
-      chatBound = true;
-
-      if (FIREBASE_READY) {
-        rtdb.ref("portfolio3_teacherChat").limitToLast(40).on("value", snap => {
-          const items = [];
-          snap.forEach(child => items.push(child.val()));
-          renderChat(items);
-        });
-      } else {
-        renderChat(localGet("p3_chat"));
+    function shareGuideToChat(){
+      const text = document.getElementById("guideText").value.trim();
+      if(!text){
+        alert("먼저 보결 요청서를 작성해주세요.");
+        return;
       }
+      addChat("김규태 선생님", text.replace(/\n/g, " / "));
     }
 
-    function renderChat(items){
-      items.sort((a,b) => a.ts - b.ts);
-      qs("chatLog").innerHTML = items.length
-        ? items.map(item => `
-          <div class="msg">
-            <strong>${esc(item.author)}</strong><br>
-            ${esc(item.text)}
-            <small>${fmt(item.ts)}</small>
-          </div>
-        `).join("")
-        : `<div class="msg"><strong>시스템</strong><br>채팅 메시지가 아직 없습니다.</div>`;
-      qs("chatLog").scrollTop = qs("chatLog").scrollHeight;
-    }
-
-    function addChat(item){
-      if (FIREBASE_READY) {
-        rtdb.ref("portfolio3_teacherChat").push(item);
-      } else {
-        const arr = localGet("p3_chat");
-        arr.push(item);
-        localSet("p3_chat", arr.slice(-40));
-        renderChat(arr.slice(-40));
+    function initChat(){
+      const list = getChats();
+      if(!list.length){
+        saveChats([
+          { author: "김교감", text: "이번 주 독감 결석생이 많습니다. 보결 상황 공유 부탁드립니다.", time: new Date().toLocaleString("ko-KR") },
+          { author: "박국어", text: "내일 3교시 보강 가능하신 분 계실까요?", time: new Date().toLocaleString("ko-KR") }
+        ]);
       }
+      renderChat();
+      window.addEventListener("storage", (e) => {
+        if(e.key === CHAT_KEY) renderChat();
+      });
+    }
+
+    function renderChat(){
+      const list = getChats();
+      const box = document.getElementById("chatBox");
+      box.innerHTML = list.map(item => `
+        <div class="chat-msg">
+          <strong>${item.author}</strong><br>
+          ${item.text}<br>
+          <span style="font-size:12px; color:#64748b;">${item.time}</span>
+        </div>
+      `).join("");
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function addChat(author, text){
+      const list = getChats();
+      list.push({
+        author,
+        text,
+        time: new Date().toLocaleString("ko-KR")
+      });
+      saveChats(list.slice(-40));
+      renderChat();
     }
 
     function sendChat(){
-      const text = qs("chatInput").value.trim();
-      if (!text) return;
-      addChat({
-        author: currentUser ? (currentUser.displayName || currentUser.email) : "김규태(시연)",
-        text,
-        ts: Date.now()
-      });
-      qs("chatInput").value = "";
+      const input = document.getElementById("chatInput");
+      const text = input.value.trim();
+      if(!text) return;
+      addChat("김규태 선생님", text);
+      input.value = "";
     }
 
-    qs("loginBtn").addEventListener("click", login);
-    qs("logoutBtn").addEventListener("click", logout);
-    setMeta();
-    renderTeachers();
+    setLogos();
+    setLinks();
 
-    if (FIREBASE_READY) {
-      auth.onAuthStateChanged(user => {
-        if (user && allowedEmail(user.email)) showApp(user);
-        else showAuth();
-      });
+    const savedLogin = sessionStorage.getItem(LOGIN_KEY);
+    if(savedLogin){
+      openApp(savedLogin);
     }
   </script>
 </body>
