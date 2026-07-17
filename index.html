@@ -834,43 +834,7 @@
       </div>
     </section>
 
-    <!-- 6 CARDS FOR 8 CONDITIONS -->
-    <section class="cards">
-      <div class="card-item">
-        <div class="card-title"><span>[01] 소속학교 · 제작자 명시</span></div>
-        <div class="card-value">서울풍납초등학교<br><span style="color:var(--primary);">교사 김규태</span></div>
-      </div>
-      <div class="card-item">
-        <div class="card-title"><span>[04] GitHub 레포지토리 주소</span></div>
-        <div class="card-value"><a id="repoLink" target="_blank"></a></div>
-      </div>
-      <div class="card-item">
-        <div class="card-title"><span>[06] 프론트엔드 배포 웹주소</span></div>
-        <div class="card-value"><a id="deployLink" target="_blank"></a></div>
-      </div>
-      <div class="card-item">
-        <div class="card-title"><span>[05] Firebase 백엔드 연동</span></div>
-        <div class="card-value" style="font-size:14px; font-weight:700; color:#334155;">
-          • Google/시연계정 동시 인증<br>
-          • 실시간 채팅 & 기록 Database
-        </div>
-      </div>
-      <div class="card-item">
-        <div class="card-title"><span>[02]·[03]·[07] 정책 및 사용안내</span></div>
-        <div class="card-value" style="margin-top:6px; display:flex; gap:6px; flex-wrap:wrap;">
-          <button class="btn-policy-mini" onclick="openPolicyModal('privacy')">🛡️ 개인정보</button>
-          <button class="btn-policy-mini" onclick="openPolicyModal('terms')">📜 사용약관</button>
-          <button class="btn-policy-mini" onclick="openPolicyModal('guide')">📖 사용안내</button>
-        </div>
-      </div>
-      <div class="card-item">
-        <div class="card-title"><span>[08] 배포 및 최종 검증</span></div>
-        <div class="card-value">
-          <span style="color:#10b981;">✅ 정상 작동 검증 완료</span><br>
-          <span style="font-size:12px; color:var(--muted); font-weight:normal;">웹접속·링크·정책·저장기능 완비</span>
-        </div>
-      </div>
-    </section>
+
 
     <!-- TEACHERS GRID -->
     <div class="section-title" style="margin-top:24px;">
@@ -1479,58 +1443,65 @@
       return `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(authorName)}&backgroundColor=e6fffb`;
     }
 
-    let chatUnsubscribe = null;
-    function initChat(){
-      const chatRef = query(ref(db, 'chats'), limitToLast(50));
-      if (chatUnsubscribe) chatUnsubscribe();
-      
-      chatUnsubscribe = onValue(chatRef, (snapshot) => {
-        const box = document.getElementById("chatBox");
-        if(!box) return;
-        box.innerHTML = "";
-        if (snapshot.exists()) {
-          const chats = [];
-          snapshot.forEach((child) => {
-            chats.push(child.val());
-          });
-          box.innerHTML = chats.map(item => {
-            const isMe = (item.author === userName) || (currentUser && item.author === currentUser.displayName);
-            const isSystem = item.author === "시스템";
-            const avatar = item.avatarUrl || getAvatarForUser(item.author);
-            if (isSystem) {
-              return `
-                <div style="text-align:center; margin:10px 0; font-size:12px; color:#64748b; background:#f1f5f9; padding:6px 12px; border-radius:99px; align-self:center;">
-                  🤖 ${item.text} <span style="font-size:10px; color:#94a3b8;">(${item.time || ''})</span>
-                </div>
-              `;
-            }
+    let localChats = JSON.parse(localStorage.getItem("localChats_portfolio3") || "[]");
+
+    function renderLocalChats() {
+      const box = document.getElementById("chatBox");
+      if(!box) return;
+      box.innerHTML = "";
+      if (localChats.length > 0) {
+        box.innerHTML = localChats.map(item => {
+          const isMe = (item.author === userName) || (currentUser && item.author === currentUser.displayName);
+          const isSystem = item.author === "시스템";
+          const avatar = item.avatarUrl || getAvatarForUser(item.author);
+          if (isSystem) {
             return `
-            <div class="chat-msg-row ${isMe ? 'chat-me' : 'chat-other'}">
-              <img src="${avatar}" class="chat-avatar" alt="${item.author}" onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Teacher&backgroundColor=e6fffb'">
-              <div class="chat-bubble-wrap">
-                <div class="chat-author">${item.author} ${isMe ? '<span class="chat-badge-me">나</span>' : ''}</div>
-                <div class="chat-bubble">${item.text}</div>
-                <div class="chat-time">${item.time || ''}</div>
+              <div style="text-align:center; margin:10px 0; font-size:12px; color:#64748b; background:#f1f5f9; padding:6px 12px; border-radius:99px; align-self:center;">
+                🤖 ${item.text} <span style="font-size:10px; color:#94a3b8;">(${item.time || ''})</span>
               </div>
-            </div>
             `;
-          }).join("");
-          box.scrollTop = box.scrollHeight;
-        } else {
-          box.innerHTML = `<div style="text-align:center; color:var(--muted); padding:40px 0;">첫 번째 채팅 메시지를 남겨보세요!</div>`;
+          }
+          return `
+          <div class="chat-msg-row ${isMe ? 'chat-me' : 'chat-other'}">
+            <img src="${avatar}" class="chat-avatar" alt="${item.author}" onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Teacher&backgroundColor=e6fffb'">
+            <div class="chat-bubble-wrap">
+              <div class="chat-author">${item.author} ${isMe ? '<span class="chat-badge-me">나</span>' : ''}</div>
+              <div class="chat-bubble">${item.text}</div>
+              <div class="chat-time">${item.time || ''}</div>
+            </div>
+          </div>
+          `;
+        }).join("");
+        box.scrollTop = box.scrollHeight;
+      } else {
+        box.innerHTML = `<div style="text-align:center; color:var(--muted); padding:40px 0;">첫 번째 채팅 메시지를 남겨보세요!</div>`;
+      }
+    }
+
+    function initChat(){
+      renderLocalChats();
+      setInterval(() => {
+        const newChats = JSON.parse(localStorage.getItem("localChats_portfolio3") || "[]");
+        if(newChats.length !== localChats.length) {
+          localChats = newChats;
+          renderLocalChats();
         }
-      });
+      }, 1000);
     }
 
     function addChat(author, text, customAvatar = null){
       const avatarUrl = customAvatar || getAvatarForUser(author);
-      push(ref(db, 'chats'), {
+      const newChat = {
         author,
         text,
         avatarUrl,
         time: new Date().toLocaleTimeString("ko-KR", { hour: '2-digit', minute: '2-digit' }),
         fullTime: new Date().toLocaleString("ko-KR")
-      });
+      };
+      localChats.push(newChat);
+      if(localChats.length > 50) localChats.shift();
+      localStorage.setItem("localChats_portfolio3", JSON.stringify(localChats));
+      renderLocalChats();
     }
 
     window.sendChat = function(){
