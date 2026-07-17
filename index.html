@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>서울풍납초등학교 스마트 보결 배정 시스템</title>
+  <style>
+    :root{
+      --primary:#0f766e;
+      --accent:#2563eb;
+      --bg:#f3faf8;
+      --card:#ffffff;
+      --line:#cfe7e2;
+      --text:#1f2937;
+      --muted:#64748b;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Pretendard,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    .hidden{display:none !important}
+    .auth{min-height:100vh;display:grid;place-items:center;padding:24px}
+    .auth-box,.card{background:#fff;border:1px solid var(--line);border-radius:18px}
+    .auth-box{width:min(540px,100%);padding:32px;text-align:center}
+    .logo{width:78px;height:78px;object-fit:contain;margin-bottom:10px}
+    .btn{border:0;border-radius:12px;padding:12px 16px;cursor:pointer;font-weight:700}
+    .btn.primary{background:var(--primary);color:#fff}
+    .btn.secondary{background:#ecfeff;color:var(--primary)}
+    .app{max-width:1320px;margin:0 auto;padding:20px}
+    .header{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:16px}
+    .brand{display:flex;gap:14px;align-items:center}
+    .brand h1{margin:0;font-size:28px}
+    .brand p{margin:4px 0 0;color:#475569}
+    .badge{display:inline-block;background:#ecfeff;color:var(--primary);padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700}
+    .userbox{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .hero{padding:20px}
+    .hero p{color:#475569;line-height:1.7}
+    .mini-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .mini-card{padding:14px;border:1px solid var(--line);border-radius:14px;background:#f5fffd}
+    .mini-card strong{display:block;margin-bottom:8px}
+    .mini-card a{color:var(--accent);word-break:break-all}
+    .info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:16px}
+    details.card{padding:14px}
+    details summary{cursor:pointer;font-weight:700}
+    .teacher-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:16px}
+    .teacher-card{padding:14px;text-align:center}
+    .avatar{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;margin:0 auto 10px;background:#dbeafe;color:#1d4ed8;font-weight:800;font-size:20px}
+    .main-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;margin-top:16px}
+    .pane{padding:18px}
+    .field{margin-bottom:12px}
+    .field label{display:block;font-weight:700;margin-bottom:6px}
+    input,textarea,select{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font:inherit}
+    textarea{min-height:96px;resize:vertical;line-height:1.6}
+    .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{border-bottom:1px solid var(--line);padding:12px;text-align:left;vertical-align:top}
+    th{background:#f0fdfa}
+    .chat-log{height:340px;overflow:auto;border:1px solid var(--line);border-radius:14px;padding:12px;background:#f8fafc}
+    .msg{padding:10px 12px;border-radius:12px;margin-bottom:10px;background:#fff;border:1px solid #e2e8f0;line-height:1.5}
+    .msg small{display:block;color:#64748b;margin-top:6px}
+    .chat-row{display:flex;gap:8px;margin-top:10px}
+    .preview{margin-top:16px}
+    .preview textarea{min-height:170px}
+    .history ul{list-style:none;margin:0;padding:0}
+    .history li{padding:12px;border-bottom:1px solid var(--line);line-height:1.5}
+    footer{margin:20px 0 32px;text-align:center;color:#475569;font-size:14px}
+    @media (max-width: 980px){
+      .main-grid{grid-template-columns:1fr}
+      .form-grid{grid-template-columns:1fr}
+      .header{flex-direction:column;align-items:flex-start}
+    }
+  </style>
+</head>
+<body>
+  <div id="authScreen" class="auth">
+    <div class="auth-box">
+      <img src="logo.png" alt="서울풍납초등학교 로고" class="logo" onerror="this.style.display='none'">
+      <h1>서울풍납초등학교 스마트 보결 배정 시스템</h1>
+      <p>소속학교: 서울풍납초등학교 / 작성자: 교사 김규태</p>
+      <p>
+        보결 수업 매칭, 교사 비상 연락망, 실시간 채팅, 단원·차시·활동 안내문 작성 기능을 한 화면에 담은 시연 서비스입니다.
+      </p>
+      <button id="loginBtn" class="btn primary">Google 계정으로 인증하고 입장</button>
+      <p style="margin-top:12px;color:#64748b;">실제 제출용은 Firebase 연결 후 배포 URL에서 확인하세요.</p>
+    </div>
+  </div>
+
+  <div id="appShell" class="app hidden">
+    <div class="header">
+      <div class="brand">
+        <img src="logo.png" alt="서울풍납초등학교 로고" class="logo" onerror="this.style.display='none'">
+        <div>
+          <span class="badge">소속학교: 서울풍납초등학교</span>
+          <h1>스마트 보결 배정 시스템</h1>
+          <p>작성자: 서울풍납초등학교 교사 김규태</p>
+        </div>
+      </div>
+      <div class="userbox">
+        <span id="backendBadge" class="badge">백엔드 확인 중</span>
+        <span id="userInfo" class="badge">로그인 정보 없음</span>
+        <button id="logoutBtn" class="btn secondary">로그아웃</button>
+      </div>
+    </div>
+
+    <section class="card hero">
+      <h2>서비스 소개</h2>
+      <p>
+        결강이 발생했을 때 보결 가능 교사를 빠르게 확인하고, 단원명·차시·활동·유의사항을 한 번에 정리해 전달하는 서비스입니다.
+        실시간 채팅을 통해 보강 가능 여부를 신속하게 소통할 수 있도록 구성했습니다.
+      </p>
+      <div class="mini-grid">
+        <div class="mini-card">
+          <strong>GitHub 레포지토리 주소</strong>
+          <a id="repoLink" href="#" target="_blank" rel="noopener"></a>
+        </div>
+        <div class="mini-card">
+          <strong>프론트엔드 웹주소</strong>
+          <a id="deployLink" href="#" target="_blank" rel="noopener"></a>
+        </div>
+        <div class="mini-card">
+          <strong>Firebase 백엔드</strong>
+          <span id="backendText"></span>
+        </div>
+        <div class="mini-card">
+          <strong>문의처</strong>
+          <span>서울풍납초등학교 교사 김규태 / 교내 문의</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="info-grid">
+      <details class="card" open>
+        <summary>개인정보처리방침</summary>
+        <p>
+          수집 항목: 로그인 계정 이름, 이메일, 결강 교사명, 보결 요청 내용, 교사 채팅 메시지.<br>
+          이용 목적: 보결 매칭, 수업 안내 공유, 업무 기록 확인.<br>
+          보관 기간: 시연용 예시 기준 90일.<br>
+          문의처: 서울풍납초등학교 교사 김규태.
+        </p>
+      </details>
+      <details class="card">
+        <summary>사용약관</summary>
+        <p>
+          본 서비스는 학교 보결 업무 지원을 위한 시연용입니다.<br>
+          허위 정보 입력, 타인 비방, 개인정보 오입력을 금지합니다.<br>
+          시스템 정책과 기능은 운영 상황에 따라 변경될 수 있습니다.
+        </p>
+      </details>
+      <details class="card">
+        <summary>사용방법 안내</summary>
+        <p>
+          1) 로그인 후 결강 정보와 수업 정보를 입력합니다.<br>
+          2) 추천 교사를 확인합니다.<br>
+          3) 자동 생성된 보결 안내문을 복사하거나 채팅창에 공유합니다.<br>
+          4) 실시간 채팅으로 보강 가능 여부를 확인합니다.
+        </p>
+      </details>
+      <details class="card">
+        <summary>배포 완료 확인</summary>
+        <p>
+          □ 로그인 가능<br>
+          □ 교사 연락망 표시 확인<br>
+          □ 추천 교사 테이블 표시 확인<br>
+          □ 실시간 채팅 동작 확인<br>
+          □ 안내문 복사 기능 확인
+        </p>
+      </details>
+    </section>
+
+    <section class="teacher-strip" id="teacherStrip"></section>
+
+    <section class="main-grid">
+      <div class="card pane">
+        <h2 style="margin-top:0;">보결 요청서 작성</h2>
+        <div class="form-grid">
+          <div class="field">
+            <label for="absentTeacher">결강 교사</label>
+            <input id="absentTeacher" type="text" placeholder="예: 박국어 선생님">
+          </div>
+          <div class="field">
+            <label for="period">교시</label>
+            <select id="period">
+              <option value="1교시">1교시</option>
+              <option value="2교시">2교시</option>
+              <option value="3교시">3교시</option>
+              <option value="4교시">4교시</option>
+              <option value="5교시">5교시</option>
+              <option value="6교시">6교시</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="className">학급</label>
+            <input id="className" type="text" placeholder="예: 5학년 2반">
+          </div>
+          <div class="field">
+            <label for="subject">교과</label>
+            <input id="subject" type="text" placeholder="예: 과학">
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="unitName">단원명</label>
+            <input id="unitName" type="text" placeholder="예: 4단원 화산과 지진">
+          </div>
+          <div class="field">
+            <label for="lessonNo">차시</label>
+            <input id="lessonNo" type="text" placeholder="예: 3/10차시">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="activities">해야 할 활동</label>
+          <textarea id="activities" placeholder="예: 실험관찰 24쪽 풀이, 모둠별 관찰 결과 정리"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="cautions">유의사항</label>
+          <textarea id="cautions" placeholder="예: 모둠 실험 안전지도, 교과서 72쪽까지 진행"></textarea>
+        </div>
+
+        <button class="btn primary" onclick="submitRequest()">추천 교사 찾기 및 요청 저장</button>
+
+        <div id="matchArea" style="margin-top:18px;"></div>
+
+        <div class="preview">
+          <h3>자동 생성 안내문</h3>
+          <textarea id="guidePreview" readonly placeholder="보결 요청서를 작성하면 이곳에 안내문이 자동 생성됩니다."></textarea>
+          <div style="margin-top:10px;">
+            <button class="btn secondary" onclick="copyGuide()">안내문 복사</button>
+          </div>
+        </div>
+
+        <div class="history" style="margin-top:18px;">
+          <h3>최근 보결 요청 기록</h3>
+          <ul id="historyList"></ul>
+        </div>
+      </div>
+
+      <div class="card pane">
+        <h2 style="margin-top:0;">교사 실시간 채팅</h2>
+        <div id="chatLog" class="chat-log"></div>
+        <div class="chat-row">
+          <input id="chatInput" type="text" placeholder="예: 3교시 보강 가능합니다." onkeydown="if(event.key==='Enter'){sendChat()}">
+          <button class="btn primary" onclick="sendChat()">전송</button>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      소속학교: 서울풍납초등학교 | 이름: 김규태 | GitHub 공개 저장소와 배포 URL을 포함한 포트폴리오 3
+    </footer>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script>
+    const APP_INFO = {
+      repoUrl: "https://github.com/깃허브아이디/pungnap-portfolio-3",
+      deployUrl: "https://pungnap-portfolio-3.vercel.app",
+      allowedDomains: ["sen.go.kr", "school.kr"]
+    };
+
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.firebasestorage.app",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID",
+      databaseURL: "https://YOUR_PROJECT-default-rtdb.asia-southeast1.firebasedatabase.app"
+    };
+
+    const TEACHERS = [
+      { name:"김수학", phone:"010-1111-2201", subject:"수학", free:["2교시","4교시"], avatar:"김" },
+      { name:"박국어", phone:"010-1111-2202", subject:"국어", free:["1교시","3교시"], avatar:"박" },
+      { name:"최과학", phone:"010-1111-2203", subject:"과학", free:["2교시","5교시"], avatar:"최" },
+      { name:"이사회", phone:"010-1111-2204", subject:"사회", free:["3교시","4교시"], avatar:"이" },
+      { name:"정영어", phone:"010-1111-2205", subject:"영어", free:["1교시","6교시"], avatar:"정" },
+      { name:"한창체", phone:"010-1111-2206", subject:"창체", free:["2교시","6교시"], avatar:"한" }
+    ];
+
+    const FIREBASE_READY =
+      window.firebase &&
+      firebaseConfig.apiKey &&
+      !String(firebaseConfig.apiKey).includes("YOUR_");
+
+    let auth = null;
+    let db = null;
+    let rtdb = null;
+    let currentUser = null;
+    let chatBound = false;
+
+    if (FIREBASE_READY) {
+      firebase.initializeApp(firebaseConfig);
+      auth = firebase.auth();
+      db = firebase.firestore();
+      rtdb = firebase.database();
+    }
+
+    function qs(id){ return document.getElementById(id); }
+    function esc(v){ return String(v || "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m])); }
+    function two(n){ return String(n).padStart(2, "0"); }
+    function fmt(ts){
+      const d = new Date(ts);
+      return d.getFullYear()+"-"+two(d.getMonth()+1)+"-"+two(d.getDate())+" "+two(d.getHours())+":"+two(d.getMinutes());
+    }
+    function allowedEmail(email){
+      if (!email) return false;
+      return APP_INFO.allowedDomains.some(d => email.toLowerCase().endsWith("@" + d.replace("@","").toLowerCase()));
+    }
+    function localGet(key){
+      try { return JSON.parse(localStorage.getItem(key) || "[]"); } catch(e){ return []; }
+    }
+    function localSet(key, value){
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function setMeta(){
+      qs("repoLink").href = APP_INFO.repoUrl;
+      qs("repoLink").textContent = APP_INFO.repoUrl;
+      qs("deployLink").href = APP_INFO.deployUrl;
+      qs("deployLink").textContent = APP_INFO.deployUrl;
+      qs("backendBadge").textContent = FIREBASE_READY ? "Firebase 연동 모드" : "시연 모드";
+      qs("backendText").textContent = FIREBASE_READY
+        ? "Authentication + Firestore + Realtime Database 사용"
+        : "Firebase 미설정 시 LocalStorage 시연 모드로 동작";
+    }
+
+    function renderTeachers(){
+      qs("teacherStrip").innerHTML = TEACHERS.map(t => `
+        <div class="card teacher-card">
+          <div class="avatar">${esc(t.avatar)}</div>
+          <strong>${esc(t.name)}</strong><br>
+          <span style="color:#475569">${esc(t.subject)}</span><br>
+          <span style="color:#2563eb">${esc(t.phone)}</span><br>
+          <span style="color:#64748b">공강: ${esc(t.free.join(", "))}</span>
+        </div>
+      `).join("");
+    }
+
+    function showApp(user){
+      currentUser = user;
+      qs("authScreen").classList.add("hidden");
+      qs("appShell").classList.remove("hidden");
+      qs("userInfo").textContent = (user.displayName || "사용자") + " / " + (user.email || "demo@local");
+      renderTeachers();
+      loadHistory();
+      bindChat();
+    }
+
+    function showAuth(){
+      qs("appShell").classList.add("hidden");
+      qs("authScreen").classList.remove("hidden");
+    }
+
+    async function login(){
+      if (!FIREBASE_READY) {
+        showApp({ displayName: "김규태(시연)", email: "demo@school.local" });
+        return;
+      }
+      try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: "select_account" });
+        const result = await auth.signInWithPopup(provider);
+        if (!allowedEmail(result.user.email)) {
+          await auth.signOut();
+          alert("허용된 학교/교육청 계정으로만 접속할 수 있습니다.");
+          return;
+        }
+        await db.collection("portfolio3_accessLogs").add({
+          email: result.user.email,
+          name: result.user.displayName || "",
+          createdAtMs: Date.now()
+        });
+        showApp(result.user);
+      } catch (e) {
+        alert("로그인 중 오류가 발생했습니다: " + e.message);
+      }
+    }
+
+    async function logout(){
+      if (FIREBASE_READY && auth) await auth.signOut();
+      showAuth();
+    }
+
+    function recommendTeachers(subject, period){
+      return TEACHERS
+        .filter(t => t.free.includes(period))
+        .sort((a, b) => {
+          const aScore = a.subject === subject ? 1 : 0;
+          const bScore = b.subject === subject ? 1 : 0;
+          return bScore - aScore;
+        });
+    }
+
+    async function submitRequest(){
+      const absentTeacher = qs("absentTeacher").value.trim();
+      const period = qs("period").value;
+      const className = qs("className").value.trim();
+      const subject = qs("subject").value.trim();
+      const unitName = qs("unitName").value.trim();
+      const lessonNo = qs("lessonNo").value.trim();
+      const activities = qs("activities").value.trim();
+      const cautions = qs("cautions").value.trim();
+
+      if (!absentTeacher || !className || !subject || !unitName || !lessonNo || !activities) {
+        alert("필수 항목을 모두 입력해주세요.");
+        return;
+      }
+
+      const matches = recommendTeachers(subject, period);
+      qs("matchArea").innerHTML = matches.length ? `
+        <h3>추천 교사</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>교사</th>
+              <th>교과</th>
+              <th>연락처</th>
+              <th>공강</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${matches.map(t => `
+              <tr>
+                <td>${esc(t.name)}</td>
+                <td>${esc(t.subject)}</td>
+                <td>${esc(t.phone)}</td>
+                <td>${esc(t.free.join(", "))}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      ` : "<p>해당 교시에 추천 가능한 교사가 없습니다.</p>";
+
+      const guide = `[보결 수업 안내]
+결강 교사: ${absentTeacher}
+학급: ${className}
+교시: ${period}
+교과: ${subject}
+단원명: ${unitName}
+차시: ${lessonNo}
+해야 할 활동: ${activities}
+유의사항: ${cautions || "없음"}
+작성자: 서울풍납초등학교 교사 김규태`;
+
+      qs("guidePreview").value = guide;
+
+      const record = {
+        absentTeacher,
+        className,
+        period,
+        subject,
+        unitName,
+        lessonNo,
+        activities,
+        cautions,
+        guide,
+        createdBy: currentUser ? (currentUser.displayName || currentUser.email) : "시연 사용자",
+        createdAtMs: Date.now()
+      };
+
+      if (FIREBASE_READY) {
+        await db.collection("portfolio3_requests").add(record);
+      } else {
+        const arr = localGet("p3_requests");
+        arr.unshift(record);
+        localSet("p3_requests", arr.slice(0, 20));
+      }
+
+      addChat({
+        author: "시스템",
+        text: `${absentTeacher} / ${className} / ${period} 보결 요청이 등록되었습니다. 단원: ${unitName} ${lessonNo}`,
+        ts: Date.now()
+      });
+
+      loadHistory();
+    }
+
+    async function loadHistory(){
+      let rows = [];
+      if (FIREBASE_READY) {
+        const snap = await db.collection("portfolio3_requests").orderBy("createdAtMs", "desc").limit(8).get();
+        rows = snap.docs.map(doc => doc.data());
+      } else {
+        rows = localGet("p3_requests");
+      }
+      qs("historyList").innerHTML = rows.length
+        ? rows.map(r => `<li><strong>${esc(r.absentTeacher)}</strong> / ${esc(r.className)} / ${esc(r.period)} / ${esc(r.subject)}<br><span style="color:#64748b">${esc(r.unitName)} ${esc(r.lessonNo)}</span></li>`).join("")
+        : "<li>아직 보결 요청 기록이 없습니다.</li>";
+    }
+
+    async function copyGuide(){
+      const text = qs("guidePreview").value.trim();
+      if (!text) {
+        alert("먼저 보결 요청서를 작성해주세요.");
+        return;
+      }
+      await navigator.clipboard.writeText(text);
+      alert("안내문을 복사했습니다.");
+    }
+
+    function bindChat(){
+      if (chatBound) return;
+      chatBound = true;
+
+      if (FIREBASE_READY) {
+        rtdb.ref("portfolio3_teacherChat").limitToLast(40).on("value", snap => {
+          const items = [];
+          snap.forEach(child => items.push(child.val()));
+          renderChat(items);
+        });
+      } else {
+        renderChat(localGet("p3_chat"));
+      }
+    }
+
+    function renderChat(items){
+      items.sort((a,b) => a.ts - b.ts);
+      qs("chatLog").innerHTML = items.length
+        ? items.map(item => `
+          <div class="msg">
+            <strong>${esc(item.author)}</strong><br>
+            ${esc(item.text)}
+            <small>${fmt(item.ts)}</small>
+          </div>
+        `).join("")
+        : `<div class="msg"><strong>시스템</strong><br>채팅 메시지가 아직 없습니다.</div>`;
+      qs("chatLog").scrollTop = qs("chatLog").scrollHeight;
+    }
+
+    function addChat(item){
+      if (FIREBASE_READY) {
+        rtdb.ref("portfolio3_teacherChat").push(item);
+      } else {
+        const arr = localGet("p3_chat");
+        arr.push(item);
+        localSet("p3_chat", arr.slice(-40));
+        renderChat(arr.slice(-40));
+      }
+    }
+
+    function sendChat(){
+      const text = qs("chatInput").value.trim();
+      if (!text) return;
+      addChat({
+        author: currentUser ? (currentUser.displayName || currentUser.email) : "김규태(시연)",
+        text,
+        ts: Date.now()
+      });
+      qs("chatInput").value = "";
+    }
+
+    qs("loginBtn").addEventListener("click", login);
+    qs("logoutBtn").addEventListener("click", logout);
+    setMeta();
+    renderTeachers();
+
+    if (FIREBASE_READY) {
+      auth.onAuthStateChanged(user => {
+        if (user && allowedEmail(user.email)) showApp(user);
+        else showAuth();
+      });
+    }
+  </script>
+</body>
+</html>
