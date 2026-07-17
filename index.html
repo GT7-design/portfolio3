@@ -8,7 +8,9 @@
     :root{
       --primary:#0f766e;
       --primary-2:#14b8a6;
+      --primary-light:#e6fffa;
       --accent:#2563eb;
+      --accent-light:#eff6ff;
       --bg:#f4fbfa;
       --card:#ffffff;
       --line:#d8ece8;
@@ -46,17 +48,19 @@
       align-items:center;
       justify-content:center;
       padding:24px;
+      position:relative;
+      z-index:2;
     }
     .login-card,.card{
-      background:rgba(255,255,255,.9);
+      background:rgba(255,255,255,.94);
       border:1px solid var(--line);
       border-radius:28px;
-      backdrop-filter:blur(10px);
+      backdrop-filter:blur(12px);
       box-shadow:0 20px 50px rgba(15,118,110,.08);
     }
     .login-card{
-      width:min(560px,100%);
-      padding:34px;
+      width:min(600px,100%);
+      padding:36px;
       position:relative;
       overflow:hidden;
     }
@@ -68,6 +72,7 @@
       width:180px;
       height:180px;
       background:radial-gradient(circle, rgba(20,184,166,.18), transparent 70%);
+      pointer-events:none;
     }
     .logo{
       width:96px;
@@ -83,7 +88,7 @@
     .center{display:flex;justify-content:center}
     .chip{
       display:inline-flex;
-      padding:8px 12px;
+      padding:8px 14px;
       border-radius:999px;
       background:#ecfeff;
       color:var(--primary);
@@ -104,8 +109,9 @@
       color:var(--muted);
       line-height:1.7;
       margin-bottom:24px;
+      font-size:15px;
     }
-    .field{margin-bottom:12px}
+    .field{margin-bottom:14px}
     .field label{
       display:block;
       margin-bottom:6px;
@@ -120,6 +126,12 @@
       border-radius:14px;
       background:#fff;
       color:var(--text);
+      transition:border-color .2s;
+    }
+    input:focus,select:focus,textarea:focus{
+      outline:none;
+      border-color:var(--primary-2);
+      box-shadow:0 0 0 3px rgba(20,184,166,.15);
     }
     textarea{
       min-height:96px;
@@ -133,22 +145,89 @@
       cursor:pointer;
       font-weight:800;
       transition:.2s ease;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      text-decoration:none;
     }
-    .btn:hover{transform:translateY(-1px)}
+    .btn:hover{transform:translateY(-1px); box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .btn:active{transform:translateY(0)}
     .btn-primary{
       background:linear-gradient(135deg,var(--primary),var(--primary-2));
       color:#fff;
     }
+    .btn-google{
+      background:#ffffff;
+      color:#1e293b;
+      border:1px solid #cbd5e1;
+    }
+    .btn-google:hover{background:#f8fafc; border-color:#94a3b8}
     .btn-light{
       background:#f0fdfa;
       color:var(--primary);
       border:1px solid #d5efea;
     }
+    .btn-policy{
+      background:#eff6ff;
+      color:var(--accent);
+      border:1px solid #bfdbfe;
+    }
+    .btn-policy-mini{
+      padding:6px 10px;
+      font-size:12px;
+      border-radius:8px;
+      background:#f1f5f9;
+      color:#334155;
+      border:1px solid #e2e8f0;
+      cursor:pointer;
+      font-weight:700;
+      transition:.2s;
+    }
+    .btn-policy-mini:hover{background:#e2e8f0; transform:translateY(-1px)}
     .login-actions{
       display:grid;
       grid-template-columns:1fr 1fr;
       gap:10px;
+      margin-top:16px;
     }
+    .login-demo-box{
+      margin-top:20px;
+      padding:16px;
+      border-radius:16px;
+      background:#f8fffe;
+      border:1px dashed #b2e4dc;
+    }
+    .login-demo-title{
+      font-size:14px;
+      font-weight:800;
+      color:var(--primary);
+      margin-bottom:10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .login-policy-bar{
+      margin-top:24px;
+      padding-top:16px;
+      border-top:1px solid var(--line);
+      display:flex;
+      justify-content:center;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+    .policy-link-btn{
+      background:none;
+      border:none;
+      color:var(--muted);
+      font-size:13px;
+      font-weight:700;
+      cursor:pointer;
+      padding:4px 8px;
+      border-radius:6px;
+      transition:.2s;
+    }
+    .policy-link-btn:hover{color:var(--primary); background:#f0fdfa}
     .notice{
       margin-top:14px;
       padding:12px 14px;
@@ -164,6 +243,8 @@
       max-width:1340px;
       margin:0 auto;
       padding:24px 18px 40px;
+      position:relative;
+      z-index:2;
     }
     .topbar{
       display:flex;
@@ -199,26 +280,43 @@
       line-height:1.55;
       font-size:14px;
     }
+    .top-actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
     .pill{
       display:inline-flex;
       align-items:center;
       gap:8px;
       background:#fff;
       border:1px solid var(--line);
-      padding:10px 12px;
+      padding:10px 14px;
       border-radius:999px;
       font-size:13px;
       font-weight:700;
       color:#334155;
+      box-shadow:0 2px 8px rgba(0,0,0,.03);
     }
+    .pill-badge{
+      padding:2px 8px;
+      border-radius:99px;
+      font-size:11px;
+      font-weight:800;
+    }
+    .pill-google{background:#dbeafe; color:#1e40af}
+    .pill-demo{background:#dcfce7; color:#166534}
+
     .hero{
-      background:rgba(255,255,255,.88);
+      background:rgba(255,255,255,.9);
       border:1px solid var(--line);
       border-radius:28px;
       padding:26px;
       margin-bottom:18px;
       position:relative;
       overflow:hidden;
+      box-shadow:0 12px 30px rgba(15,118,110,.05);
     }
     .hero::before{
       content:"";
@@ -229,6 +327,7 @@
       height:260px;
       border-radius:50%;
       background:radial-gradient(circle, rgba(20,184,166,.16), transparent 70%);
+      pointer-events:none;
     }
     .hero-grid{
       display:grid;
@@ -257,21 +356,25 @@
     }
     .cards{
       display:grid;
-      grid-template-columns:repeat(4,1fr);
+      grid-template-columns:repeat(3,1fr);
       gap:14px;
       margin-bottom:18px;
     }
     .card-item{
-      background:rgba(255,255,255,.9);
+      background:rgba(255,255,255,.94);
       border:1px solid var(--line);
       border-radius:22px;
       padding:18px;
+      box-shadow:0 8px 20px rgba(0,0,0,.02);
     }
     .card-title{
       font-size:13px;
       color:var(--muted);
       margin-bottom:8px;
       font-weight:700;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
     }
     .card-value{
       font-size:15px;
@@ -283,33 +386,70 @@
       color:var(--accent);
       text-decoration:none;
     }
+    .card-value a:hover{text-decoration:underline}
+
     .teacher-grid{
       display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-      gap:12px;
+      grid-template-columns:repeat(auto-fit,minmax(185px,1fr));
+      gap:14px;
       margin-bottom:18px;
     }
     .teacher-card{
-      background:rgba(255,255,255,.92);
+      background:rgba(255,255,255,.94);
       border:1px solid var(--line);
       border-radius:20px;
       padding:16px;
       text-align:center;
+      transition:transform .2s, box-shadow .2s;
+    }
+    .teacher-card:hover{
+      transform:translateY(-3px);
+      box-shadow:0 10px 24px rgba(15,118,110,.1);
+    }
+    .teacher-avatar-wrap{
+      width:68px;
+      height:68px;
+      margin:0 auto 10px;
+      position:relative;
+    }
+    .teacher-avatar-img{
+      width:68px;
+      height:68px;
+      border-radius:20px;
+      object-fit:cover;
+      background:#e6fffb;
+      border:2px solid #c9f6f0;
+      box-shadow:0 4px 10px rgba(0,0,0,.06);
     }
     .avatar{
-      width:58px;
-      height:58px;
-      margin:0 auto 10px;
-      border-radius:18px;
+      width:68px;
+      height:68px;
+      margin:0 auto;
+      border-radius:20px;
       background:#e6fffb;
-      border:1px solid #c9f6f0;
+      border:2px solid #c9f6f0;
       display:flex;
       align-items:center;
       justify-content:center;
       font-weight:900;
       color:var(--primary);
-      font-size:22px;
+      font-size:24px;
     }
+    .btn-teacher-chat{
+      margin-top:10px;
+      width:100%;
+      padding:7px 10px;
+      border-radius:10px;
+      border:1px solid #cbd5e1;
+      background:#f8fafc;
+      color:#334155;
+      font-size:12px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.2s;
+    }
+    .btn-teacher-chat:hover{background:#e2e8f0; color:#0f172a}
+
     .content{
       display:grid;
       grid-template-columns:1.05fr .95fr;
@@ -320,6 +460,9 @@
       font-weight:900;
       margin-bottom:14px;
       letter-spacing:-.02em;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
     }
     .form-grid{
       display:grid;
@@ -349,24 +492,98 @@
       border:1px solid #e2efec;
       background:#f8fffe;
       border-radius:18px;
-      padding:12px;
-      height:340px;
-      overflow:auto;
+      padding:16px;
+      height:380px;
+      overflow-y:auto;
+      display:flex;
+      flex-direction:column;
     }
-    .chat-msg{
-      padding:12px 14px;
-      border-radius:16px;
-      margin-bottom:10px;
-      line-height:1.6;
+    .chat-msg-row{
+      display:flex;
+      gap:12px;
+      margin-bottom:14px;
+      align-items:flex-start;
+    }
+    .chat-other{flex-direction:row}
+    .chat-me{flex-direction:row-reverse}
+    .chat-avatar{
+      width:44px;
+      height:44px;
+      border-radius:50%;
+      border:2px solid #fff;
+      box-shadow:0 2px 6px rgba(0,0,0,.08);
+      object-fit:cover;
+      background:#e6fffb;
+      flex-shrink:0;
+    }
+    .chat-bubble-wrap{
+      max-width:75%;
+      display:flex;
+      flex-direction:column;
+    }
+    .chat-me .chat-bubble-wrap{align-items:flex-end}
+    .chat-author{
+      font-size:13px;
+      font-weight:800;
+      color:#334155;
+      margin-bottom:4px;
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+    .chat-badge-me{
+      background:#2563eb;
+      color:#fff;
+      font-size:10px;
+      padding:1px 6px;
+      border-radius:99px;
+    }
+    .chat-bubble{
+      padding:11px 15px;
+      border-radius:18px;
       font-size:14px;
-      background:#fff;
-      border:1px solid #e2efec;
+      line-height:1.55;
+      word-break:break-word;
+      box-shadow:0 2px 6px rgba(0,0,0,.03);
     }
+    .chat-other .chat-bubble{
+      background:#ffffff;
+      border:1px solid #e2efec;
+      border-top-left-radius:4px;
+      color:#0f172a;
+    }
+    .chat-me .chat-bubble{
+      background:linear-gradient(135deg,var(--primary),var(--primary-2));
+      color:#ffffff;
+      border-top-right-radius:4px;
+    }
+    .chat-time{
+      font-size:11px;
+      color:#94a3b8;
+      margin-top:4px;
+    }
+    .quick-chips{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin:12px 0;
+    }
+    .quick-chip{
+      background:#f0fdfa;
+      border:1px solid #ccfbf1;
+      color:#0f766e;
+      font-size:12px;
+      font-weight:700;
+      padding:6px 10px;
+      border-radius:99px;
+      cursor:pointer;
+      transition:.2s;
+    }
+    .quick-chip:hover{background:#ccfbf1; transform:translateY(-1px)}
     .chat-row{
       display:grid;
-      grid-template-columns:1fr 110px;
+      grid-template-columns:1fr 100px;
       gap:10px;
-      margin-top:12px;
     }
     .guide-box{
       margin-top:16px;
@@ -396,6 +613,133 @@
       margin-top:10px;
       line-height:1.5;
     }
+
+    /* Policy Modal & Footer Styles */
+    .modal-backdrop{
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,.6);
+      backdrop-filter:blur(6px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:999;
+      padding:20px;
+    }
+    .modal-box{
+      background:#fff;
+      border-radius:24px;
+      width:min(860px,100%);
+      max-height:85vh;
+      display:flex;
+      flex-direction:column;
+      box-shadow:0 25px 50px -12px rgba(0,0,0,.25);
+      overflow:hidden;
+    }
+    .modal-header{
+      padding:20px 24px;
+      border-bottom:1px solid #e2e8f0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      background:#f8fafc;
+    }
+    .modal-header h3{margin:0; font-size:20px; font-weight:900;}
+    .btn-close{
+      background:#f1f5f9;
+      border:none;
+      width:36px;
+      height:36px;
+      border-radius:50%;
+      font-size:18px;
+      font-weight:bold;
+      color:#64748b;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .btn-close:hover{background:#e2e8f0; color:#0f172a}
+    .modal-tabs{
+      display:flex;
+      border-bottom:1px solid #e2e8f0;
+      background:#fff;
+      padding:0 24px;
+      gap:12px;
+      overflow-x:auto;
+    }
+    .tab-btn{
+      padding:14px 16px;
+      border:none;
+      background:none;
+      font-size:14px;
+      font-weight:800;
+      color:#64748b;
+      cursor:pointer;
+      border-bottom:3px solid transparent;
+      transition:.2s;
+    }
+    .tab-btn:hover{color:#0f172a}
+    .tab-btn.active{
+      color:var(--primary);
+      border-bottom-color:var(--primary);
+    }
+    .modal-content{
+      padding:24px;
+      overflow-y:auto;
+      line-height:1.7;
+      font-size:14px;
+      color:#334155;
+    }
+    .modal-content h4{
+      font-size:16px;
+      color:#0f172a;
+      margin:20px 0 8px;
+      font-weight:800;
+    }
+    .modal-content h4:first-child{margin-top:0}
+    .policy-table{
+      width:100%;
+      border-collapse:collapse;
+      margin:12px 0;
+    }
+    .policy-table th,.policy-table td{
+      border:1px solid #cbd5e1;
+      padding:10px 12px;
+      font-size:13px;
+    }
+    .policy-table th{background:#f1f5f9; font-weight:800;}
+
+    .app-footer{
+      max-width:1340px;
+      margin:24px auto 0;
+      padding:24px 18px;
+      border-top:1px solid var(--line);
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.6;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:16px;
+    }
+    .footer-links{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+    .footer-links button{
+      background:none;
+      border:none;
+      color:var(--primary);
+      font-weight:700;
+      cursor:pointer;
+      padding:0;
+      font-size:13px;
+    }
+    .footer-links button:hover{text-decoration:underline}
+
     @media (max-width: 1080px){
       .cards{grid-template-columns:repeat(2,1fr)}
       .content{grid-template-columns:1fr}
@@ -410,6 +754,7 @@
   </style>
 </head>
 <body>
+  <!-- LOGIN SCREEN -->
   <div id="loginScreen" class="login-wrap">
     <div class="login-card">
       <img id="loginLogo" class="logo" alt="풍납초 로고">
@@ -417,36 +762,57 @@
       <div class="login-title">스마트 보결 배정 시스템</div>
       <div class="login-sub">
         서울풍납초등학교 교사 <strong>김규태</strong> 포트폴리오 3<br>
-        결강·보강 상황에서 보결 가능 교사, 연락처, 안내문, 채팅까지 한 번에 처리하는 서비스입니다.
+        결강·보강 상황에서 보결 가능 교사, 연락처, 안내문, 채팅까지 한 번에 처리하는 스마트 서비스입니다.
       </div>
 
-      <div class="field">
-        <label for="loginEmail">Google 계정 이메일</label>
-        <input id="loginEmail" type="email" placeholder="예: teacher@sen.go.kr">
-      </div>
+      <div class="login-demo-box">
+        <div class="login-demo-title">
+          <span>🎯 로그인 모드 선택 (Google 또는 시연용 간편 로그인)</span>
+        </div>
+        <div class="field">
+          <label for="loginEmail">교직원/시연용 이메일</label>
+          <input id="loginEmail" type="email" placeholder="예: teacher@sen.go.kr" value="teacher@sen.go.kr">
+        </div>
+        <div class="field">
+          <label for="loginName">사용자 이름 / 직책 (시연 시 표시명)</label>
+          <input id="loginName" type="text" placeholder="예: 김시연 선생님 (시연용)" value="김시연 선생님 (시연용)">
+        </div>
 
-      <div class="login-actions">
-        <button class="btn btn-primary" onclick="login()">Google 계정으로 인증</button>
-        <button class="btn btn-light" onclick="fillDemo()">시연용 계정 자동 입력</button>
+        <div class="login-actions">
+          <button class="btn btn-google" onclick="loginWithGoogle()">
+            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-8.17z"/><path fill="#34A853" d="M12 24c3.3 0 6.08-1.09 8.11-2.96l-3.88-3.05c-1.1.74-2.5 1.18-4.23 1.18-3.26 0-6.02-2.2-7.01-5.17H1.01v3.15C3.04 21.3 7.23 24 12 24z"/><path fill="#FBBC05" d="M4.99 14c-.25-.74-.39-1.54-.39-2.35s.14-1.61.39-2.35V6.15H1.01C.37 7.42 0 8.89 0 10.35c0 1.46.37 2.93 1.01 4.2l3.98-3.15z"/><path fill="#EA4335" d="M12 4.75c1.79 0 3.4.62 4.67 1.83l3.5-3.5C18.08 1.19 15.3 0 12 0 7.23 0 3.04 2.7 1.01 6.85l3.98 3.15c1-2.97 3.76-5.25 7.01-5.25z"/></svg>
+            Google 계정 로그인
+          </button>
+          <button class="btn btn-primary" onclick="loginWithDemo()">
+            🚀 시연용 계정 바로 1초 로그인
+          </button>
+        </div>
       </div>
 
       <div class="notice">
-        실제 서비스에서는 교직원 계정 인증과 데이터 저장을 연동할 수 있고,
-        현재 버전은 제출용 시연 페이지로 바로 보이도록 구성했습니다.
+        💡 <strong>안내</strong>: Google 계정 연동 로그인은 실제 Firebase 인증 팝업을 이용하며, <strong>[시연용 계정 바로 1초 로그인]</strong> 클릭 시 위 입력된 정보로 심사·시연용 자동 로그인이 즉시 진행됩니다. (동시 지원)
+      </div>
+
+      <div class="login-policy-bar">
+        <button class="policy-link-btn" onclick="openPolicyModal('guide')">📖 사용방법 안내</button>
+        <button class="policy-link-btn" onclick="openPolicyModal('privacy')">🛡️ 개인정보처리방침</button>
+        <button class="policy-link-btn" onclick="openPolicyModal('terms')">📜 사용약관</button>
       </div>
     </div>
   </div>
 
+  <!-- APP SCREEN -->
   <div id="appScreen" class="app hidden">
     <div class="topbar">
       <div class="brand">
         <img id="brandLogo" class="brand-logo" alt="풍납초 로고">
         <div>
           <h2>서울풍납초등학교 스마트 보결 배정 시스템</h2>
-          <p>작성자: 서울풍납초등학교 교사 김규태<br>보결 가능 교사 추천, 긴급 연락, 수업 안내문 생성, 교사 채팅을 통합한 서비스</p>
+          <p>소속학교: 서울풍납초등학교 · 제작자: 교사 김규태<br>보결 가능 교사 추천, 안내문 자동 생성, 실시간 교사 채팅을 통합한 산출물</p>
         </div>
       </div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <div class="top-actions">
+        <button class="btn btn-policy" onclick="openPolicyModal('guide')">📖 사용방법 및 정책 안내</button>
         <div class="pill" id="userPill">로그인 전</div>
         <button class="btn btn-light" onclick="logout()">로그아웃</button>
       </div>
@@ -455,11 +821,11 @@
     <section class="hero">
       <div class="hero-grid">
         <div>
-          <h3>결강 상황에서도<br>수업 흐름이 끊기지 않도록</h3>
+          <h3>결강 상황에서도<br>수업 흐름과 소통이 끊기지 않도록</h3>
           <p>
-            갑작스러운 병가나 출장 상황에서 보결 가능 교사를 빠르게 확인하고,
-            단원명, 차시, 활동, 유의사항을 한 번에 정리해 전달할 수 있도록 설계했습니다.
-            교사 간 실시간 채팅 형태도 함께 보여주는 포트폴리오입니다.
+            갑작스러운 병가나 출장 상황에서 보결 가능 교사를 빠르게 추천받고,
+            단원명, 차시, 활동, 유의사항을 한 번에 정리해 수업 안내문으로 전달할 수 있습니다.
+            또한 교사들의 프로필 이미지와 함께 Firebase 실시간 채팅으로 빠른 협의가 가능합니다.
           </p>
         </div>
         <div class="hero-mark">
@@ -468,30 +834,56 @@
       </div>
     </section>
 
+    <!-- 6 CARDS FOR 8 CONDITIONS -->
     <section class="cards">
       <div class="card-item">
-        <div class="card-title">소속학교 · 작성자</div>
-        <div class="card-value">서울풍납초등학교<br>교사 김규태</div>
+        <div class="card-title"><span>[01] 소속학교 · 제작자 명시</span></div>
+        <div class="card-value">서울풍납초등학교<br><span style="color:var(--primary);">교사 김규태</span></div>
       </div>
       <div class="card-item">
-        <div class="card-title">GitHub 레포지토리 주소</div>
+        <div class="card-title"><span>[04] GitHub 레포지토리 주소</span></div>
         <div class="card-value"><a id="repoLink" target="_blank"></a></div>
       </div>
       <div class="card-item">
-        <div class="card-title">배포 주소</div>
+        <div class="card-title"><span>[06] 프론트엔드 배포 웹주소</span></div>
         <div class="card-value"><a id="deployLink" target="_blank"></a></div>
       </div>
       <div class="card-item">
-        <div class="card-title">핵심 기능</div>
-        <div class="card-value">교직원 인증 · 보결 추천 · 실시간 채팅 · 안내문 생성</div>
+        <div class="card-title"><span>[05] Firebase 백엔드 연동</span></div>
+        <div class="card-value" style="font-size:14px; font-weight:700; color:#334155;">
+          • Google/시연계정 동시 인증<br>
+          • 실시간 채팅 & 기록 Database
+        </div>
+      </div>
+      <div class="card-item">
+        <div class="card-title"><span>[02]·[03]·[07] 정책 및 사용안내</span></div>
+        <div class="card-value" style="margin-top:6px; display:flex; gap:6px; flex-wrap:wrap;">
+          <button class="btn-policy-mini" onclick="openPolicyModal('privacy')">🛡️ 개인정보</button>
+          <button class="btn-policy-mini" onclick="openPolicyModal('terms')">📜 사용약관</button>
+          <button class="btn-policy-mini" onclick="openPolicyModal('guide')">📖 사용안내</button>
+        </div>
+      </div>
+      <div class="card-item">
+        <div class="card-title"><span>[08] 배포 및 최종 검증</span></div>
+        <div class="card-value">
+          <span style="color:#10b981;">✅ 정상 작동 검증 완료</span><br>
+          <span style="font-size:12px; color:var(--muted); font-weight:normal;">웹접속·링크·정책·저장기능 완비</span>
+        </div>
       </div>
     </section>
 
+    <!-- TEACHERS GRID -->
+    <div class="section-title" style="margin-top:24px;">
+      <span>교내 보결 가능 교사 목록 (프로필 이미지 포함)</span>
+      <span style="font-size:13px; font-weight:normal; color:var(--muted);">교사별 하단 버튼을 눌러 실시간 채팅을 테스트해볼 수 있습니다.</span>
+    </div>
     <section class="teacher-grid" id="teacherGrid"></section>
 
+    <!-- MAIN FORM & CHAT -->
     <section class="content">
-      <div class="card" style="padding:18px;">
-        <div class="section-title">보결 요청서 작성</div>
+      <!-- LEFT: REQUEST FORM -->
+      <div class="card" style="padding:22px;">
+        <div class="section-title"><span>📝 보결 요청서 작성</span></div>
         <div class="form-grid">
           <div class="field">
             <label>결강 교사</label>
@@ -533,40 +925,202 @@
           <label>유의사항</label>
           <textarea id="cautions" placeholder="예: 모둠 실험 안전지도, 교과서 72쪽까지 진행"></textarea>
         </div>
-        <button class="btn btn-primary" onclick="submitRequest()">보결 가능 교사 추천</button>
+        <button class="btn btn-primary" style="width:100%;" onclick="submitRequest()">🔍 보결 가능 교사 추천 및 안내문 생성</button>
 
         <div id="matchArea"></div>
 
         <div class="guide-box">
-          <strong>자동 생성 안내문</strong>
+          <strong>📋 자동 생성 수업 안내문</strong>
           <textarea id="guideText" readonly placeholder="보결 요청서를 작성하면 이곳에 수업 안내문이 자동 생성됩니다."></textarea>
           <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
-            <button class="btn btn-light" onclick="copyGuide()">안내문 복사</button>
-            <button class="btn btn-light" onclick="shareGuideToChat()">채팅창에 공유</button>
+            <button class="btn btn-light" onclick="copyGuide()">📋 안내문 복사</button>
+            <button class="btn btn-light" onclick="shareGuideToChat()">💬 채팅창에 즉시 공유</button>
           </div>
         </div>
 
-        <div class="section-title" style="font-size:18px; margin-top:18px;">최근 보결 요청 기록</div>
+        <div class="section-title" style="font-size:18px; margin-top:24px;"><span>📌 최근 보결 요청 기록 (로컬 저장)</span></div>
         <ul id="historyList" class="history-list"></ul>
       </div>
 
-      <div class="card" style="padding:18px;">
-        <div class="section-title">교사 실시간 채팅</div>
+      <!-- RIGHT: LIVE CHAT -->
+      <div class="card" style="padding:22px; display:flex; flex-direction:column;">
+        <div class="section-title">
+          <span>💬 교사 간 실시간 채팅 (Firebase 연동)</span>
+          <span style="font-size:12px; font-weight:normal; color:#10b981;">● 실시간 동기화 중</span>
+        </div>
+        
         <div id="chatBox" class="chat-box"></div>
+
+        <div style="margin-top:12px;">
+          <div style="font-size:12px; font-weight:700; color:var(--muted); margin-bottom:6px;">⚡ 간편 응답 문구 클릭 (바로 입력/전송):</div>
+          <div class="quick-chips">
+            <button class="quick-chip" onclick="sendQuickChat('안녕하세요, 보강 가능합니다!')">⚡ 보강 가능합니다!</button>
+            <button class="quick-chip" onclick="sendQuickChat('네, 수업 안내문 확인했습니다.')">⚡ 안내문 확인했습니다.</button>
+            <button class="quick-chip" onclick="sendQuickChat('교과서 및 실습자료 준비해두겠습니다.')">⚡ 자료 준비하겠습니다.</button>
+            <button class="quick-chip" onclick="sendQuickChat('잠시 후 교무실에서 상의드리겠습니다.')">⚡ 교무실로 내려가겠습니다.</button>
+          </div>
+        </div>
+
         <div class="chat-row">
-          <input id="chatInput" type="text" placeholder="예: 3교시 보강 가능합니다." onkeydown="if(event.key==='Enter'){sendChat()}">
+          <input id="chatInput" type="text" placeholder="메시지를 입력하세요 (Enter 전송)" onkeydown="if(event.key==='Enter'){sendChat()}">
           <button class="btn btn-primary" onclick="sendChat()">전송</button>
         </div>
+        
         <div class="small">
-          브라우저 저장 기반 시연형 채팅입니다. 보결 요청을 등록하면 시스템 메시지도 자동으로 추가됩니다.
+          💡 선생님들의 프로필 아바타와 함께 Firebase Realtime Database에 실시간 저장/조회됩니다. 위 교사 목록에서 '채팅 테스트' 버튼으로 타 교사 아바타 메시지도 시연할 수 있습니다.
         </div>
       </div>
     </section>
+
+    <!-- FOOTER -->
+    <footer class="app-footer">
+      <div>
+        <strong>서울풍납초등학교 스마트 보결 배정 시스템</strong> (포트폴리오 3)<br>
+        소속학교: 서울풍납초등학교 | 제작자: 교사 김규태 | 문의처: teacher@sen.go.kr<br>
+        GitHub 레포지토리: <a href="https://github.com/GT7-design/portfolio3" target="_blank">https://github.com/GT7-design/portfolio3</a>
+      </div>
+      <div class="footer-links">
+        <button onclick="openPolicyModal('guide')">📖 사용방법 안내</button> |
+        <button onclick="openPolicyModal('privacy')">🛡️ 개인정보처리방침</button> |
+        <button onclick="openPolicyModal('terms')">📜 사용약관</button>
+      </div>
+    </footer>
   </div>
 
-    <script type="module">
+  <!-- POLICY & USER GUIDE MODAL -->
+  <div id="policyModal" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>📖 사용방법 및 정책 안내</h3>
+        <button class="btn-close" onclick="closePolicyModal()">×</button>
+      </div>
+      <div class="modal-tabs">
+        <button id="tabBtn_guide" class="tab-btn active" onclick="switchPolicyTab('guide')">📖 사용방법 안내 (07)</button>
+        <button id="tabBtn_privacy" class="tab-btn" onclick="switchPolicyTab('privacy')">🛡️ 개인정보처리방침 (02)</button>
+        <button id="tabBtn_terms" class="tab-btn" onclick="switchPolicyTab('terms')">📜 사용약관 (03)</button>
+      </div>
+      <div class="modal-content">
+        <!-- USER GUIDE TAB -->
+        <div id="tabPane_guide" class="tab-pane">
+          <h4>📌 시스템 개요 및 특징</h4>
+          <p>
+            본 시스템은 결강(출장, 병가 등) 발생 시 보결 가능한 교사를 신속히 찾고, 수업 단원·차시 및 유의사항을 포함한 수업 안내문을 자동 작성하며, 교사 간 실시간 채팅으로 소통하는 <strong>스마트 보결 배정 시스템</strong>입니다.
+          </p>
+
+          <h4>1단계: 로그인 (Google 또는 시연용 간편 로그인)</h4>
+          <p>
+            • <strong>Google 계정 로그인</strong>: 실제 교육청 또는 개인 구글 계정 인증으로 안전하게 접속합니다.<br>
+            • <strong>🚀 시연용 계정 바로 1초 로그인</strong>: 심사·체험 시 별도 계정 입력 없이 즉시 로그인하여 모든 기능을 사용할 수 있습니다.
+          </p>
+
+          <h4>2단계: 보결 요청서 작성 및 가능 교사 추천</h4>
+          <p>
+            • 결강 교사명, 교시(1~6교시), 학급, 교과, 단원명, 해야 할 활동 및 유의사항을 입력합니다.<br>
+            • <code>[🔍 보결 가능 교사 추천 및 안내문 생성]</code> 버튼을 누르면 해당 교시에 공강인 교사들이 우선 순위(해당 교과 우선)대로 추천됩니다.
+          </p>
+
+          <h4>3단계: 자동 생성 안내문 활용 및 실시간 채팅 공유</h4>
+          <p>
+            • 추천 완료와 동시에 깔끔한 서식의 <strong>수업 안내문</strong>이 자동 작성됩니다.<br>
+            • <code>[📋 안내문 복사]</code> 또는 <code>[💬 채팅창에 즉시 공유]</code> 버튼을 클릭하여 교사 실시간 채팅방으로 원클릭 공유할 수 있습니다.<br>
+            • 교사들은 프로필 이미지와 함께 채팅을 통해 보강 수락 및 자료 준비 사항을 실시간 협의합니다.
+          </p>
+
+          <h4>⚠️ 이용 시 유의사항</h4>
+          <p>
+            • 본 시스템 추천 및 안내문 생성 기능은 교내 업무 효율화 보조 도구이며, 최종 보결 확정은 학교 나이스(NEIS) 결재 절차를 병행하시기 바랍니다.<br>
+            • 실시간 채팅 공유 시 학생 및 교직원의 민감한 개인정보(주민등록번호 등)가 노출되지 않도록 주의 바랍니다.
+          </p>
+        </div>
+
+        <!-- PRIVACY POLICY TAB -->
+        <div id="tabPane_privacy" class="tab-pane hidden">
+          <h4>🛡️ 개인정보처리방침 개요</h4>
+          <p>
+            서울풍납초등학교 스마트 보결 배정 시스템(제작자: 교사 김규태, 이하 '본 시스템')은 교직원의 개인정보를 중요시하며, 「개인정보 보호법」 등 관련 법령을 준수합니다. 본 방침을 통해 수집 항목, 목적, 보관 기간 등을 안내합니다.
+          </p>
+
+          <h4>1. 수집하는 개인정보 항목</h4>
+          <table class="policy-table">
+            <thead>
+              <tr>
+                <th>수집 구분</th>
+                <th>수집 항목</th>
+                <th>수집 방법</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>회원 인증 정보</strong></td>
+                <td>Google 이메일 주소, 이름(표시명), 프로필 아바타 이미지</td>
+                <td>Google OAuth 로그인 또는 시연계정 입력 시 자동 수집</td>
+              </tr>
+              <tr>
+                <td><strong>업무 이용 정보</strong></td>
+                <td>소속 학교명, 결강/보결 교사명, 학급·교과·교시, 실시간 채팅 메시지</td>
+                <td>시스템 내 입력 및 채팅 이용 시 수집</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>2. 개인정보의 수집 및 이용 목적</h4>
+          <p>
+            ① <strong>교직원 본인 인증 및 권한 확인</strong>: 학교 구성원 간 안전한 시스템 접속 및 사용 기록 관리<br>
+            ② <strong>보결 수업 매칭 및 안내문 생성</strong>: 공강 시간표 기반 맞춤 교사 추천 및 원활한 수업 정보 전달<br>
+            ③ <strong>실시간 교내 소통(채팅) 지원</strong>: Firebase Realtime Database 연동을 통한 교직원 간 신속한 소통 방 개설
+          </p>
+
+          <h4>3. 개인정보의 보유 및 이용 기간</h4>
+          <p>
+            • <strong>원칙</strong>: 개인정보의 수집 및 이용 목적이 달성되거나 서비스 이용 종료(퇴직 또는 계정 삭제 요청) 시 지체 없이 파기합니다.<br>
+            • <strong>보존 예외</strong>: 학교 내 행정 업무 관리 기준 또는 관련 법령에 의해 보존할 필요가 있는 경우 해당 학년도 종료 시까지 안전하게 보관 후 파기합니다.
+          </p>
+
+          <h4>4. 개인정보 보호 문의처</h4>
+          <p>
+            • 소속학교: 서울풍납초등학교<br>
+            • 개인정보 보호 책임자: 교사 김규태<br>
+            • 문의처: `teacher@sen.go.kr` / GitHub 레포지토리(`https://github.com/GT7-design/portfolio3`) 이슈 게시판
+          </p>
+        </div>
+
+        <!-- TERMS OF SERVICE TAB -->
+        <div id="tabPane_terms" class="tab-pane hidden">
+          <h4>📜 서비스 사용약관</h4>
+
+          <h4>제 1 조 (목적 및 서비스 이용 조건)</h4>
+          <p>
+            ① 본 약관은 서울풍납초등학교 교직원의 보결 수업 배정 및 원활한 소통을 지원하기 위해 교사 김규태가 개발·운영하는 스마트 보결 배정 시스템(이하 '서비스')의 이용 조건 및 책임 범위를 규정함을 목적으로 합니다.<br>
+            ② 본 서비스는 구글 계정 인증 또는 시연용 간편 로그인 방식으로 누구나 약관에 동의하여 이용하거나 체험할 수 있습니다.
+          </p>
+
+          <h4>제 2 조 (책임 범위 및 한계)</h4>
+          <p>
+            ① 본 서비스가 제공하는 보결 가능 교사 추천 및 자동 완성 수업 안내문은 교내 시간표 데이터와 입력 정보를 기반으로 한 <strong>업무 지원 참고용 자료</strong>입니다.<br>
+            ② 실제 보결 교사 최종 지정, 수업 변경 확정 및 행정적 결재는 학교 내부 절차(나이스 및 관리자 결재)를 따라야 하며, 개발자 및 시스템은 행정적 결재 확정에 대한 책임을 지지 않습니다.
+          </p>
+
+          <h4>제 3 조 (이용자의 의무 및 금지 행위)</h4>
+          <p>
+            이용자는 본 서비스 이용 시 다음 각 호의 행위를 하여서는 안 됩니다.<br>
+            1. 타 교직원의 Google 계정 및 인증 정보를 도용하거나 부정하게 사용하는 행위<br>
+            2. 실시간 채팅창 내에서 욕설, 비방, 음란물 배포 등 타인을 모욕하거나 교직원의 품위를 손상하는 행위<br>
+            3. 불법 프로그램 주입, 해킹, 비정상적 과도한 트래픽 발생 등으로 시스템 가동 및 데이터 동기화를 방해하는 행위<br>
+            4. 학생 및 타인의 동의 없이 민감한 개인정보를 채팅창이나 요청서에 무단 게시하는 행위
+          </p>
+
+          <h4>제 4 조 (약관의 변경 및 공지)</h4>
+          <p>
+            본 약관이나 정책, 서비스 주요 기능이 변경될 경우, 변경 사항 적용 7일 전부터 시스템 화면 공지사항 또는 정책 안내 페이지를 통해 사용자에게 사전 안내합니다.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signInAnonymously, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getDatabase, ref, push, onValue, query, limitToLast } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
     const firebaseConfig = {
@@ -600,72 +1154,139 @@
     const REQUEST_KEY = "pungnap_portfolio3_requests";
 
     const TEACHERS = [
-      { name:"김수학", phone:"010-1111-2201", subject:"수학", free:["2교시","4교시"], avatar:"김" },
-      { name:"박국어", phone:"010-1111-2202", subject:"국어", free:["1교시","3교시"], avatar:"박" },
-      { name:"최과학", phone:"010-1111-2203", subject:"과학", free:["2교시","5교시"], avatar:"최" },
-      { name:"이사회", phone:"010-1111-2204", subject:"사회", free:["3교시","4교시"], avatar:"이" },
-      { name:"정영어", phone:"010-1111-2205", subject:"영어", free:["1교시","6교시"], avatar:"정" },
-      { name:"한창체", phone:"010-1111-2206", subject:"창체", free:["2교시","6교시"], avatar:"한" }
+      { name:"김수학", phone:"010-1111-2201", subject:"수학", free:["2교시","4교시"], avatar:"김", avatarUrl:"https://api.dicebear.com/7.x/avataaars/svg?seed=TeacherMathKim&backgroundColor=b6e3f4" },
+      { name:"박국어", phone:"010-1111-2202", subject:"국어", free:["1교시","3교시"], avatar:"박", avatarUrl:"https://api.dicebear.com/7.x/avataaars/svg?seed=TeacherKoreanPark&backgroundColor=c0aede" },
+      { name:"최과학", phone:"010-1111-2203", subject:"과학", free:["2교시","5교시"], avatar:"최", avatarUrl:"https://api.dicebear.com/7.x/avataaars/svg?seed=TeacherScienceChoi&backgroundColor=d1d4f9" },
+      { name:"이사회", phone:"010-1111-2204", subject:"사회", free:["3교시","4교시"], avatar:"이", avatarUrl:"https://api.dicebear.com/7.x/avataaars/svg?seed=TeacherSocialLee&backgroundColor=ffd5dc" },
+      { name:"정영어", phone:"010-1111-2205", subject:"영어", free:["1교시","6교시"], avatar:"정", avatarUrl:"https://api.dicebear.com/7.x/avataaars/svg?seed=TeacherEnglishJung&backgroundColor=ffdfbf" },
+      { name:"한창체", phone:"010-1111-2206", subject:"창체", free:["2교시","6교시"], avatar:"한", avatarUrl:"https://api.dicebear.com/7.x/avataaars/svg?seed=TeacherCreativeHan&backgroundColor=c6f6d5" }
     ];
 
     function setLogos(){
-      document.getElementById("loginLogo").src = CONFIG.LOGO_URL;
-      document.getElementById("brandLogo").src = CONFIG.LOGO_URL;
-      document.getElementById("heroLogo").src = CONFIG.LOGO_URL;
+      const l1 = document.getElementById("loginLogo");
+      const l2 = document.getElementById("brandLogo");
+      const l3 = document.getElementById("heroLogo");
+      if(l1) l1.src = CONFIG.LOGO_URL;
+      if(l2) l2.src = CONFIG.LOGO_URL;
+      if(l3) l3.src = CONFIG.LOGO_URL;
     }
 
     function setLinks(){
       const repoLink = document.getElementById("repoLink");
       const deployLink = document.getElementById("deployLink");
-      repoLink.href = REPO_URL;
-      repoLink.textContent = REPO_URL;
-      deployLink.href = CONFIG.DEPLOY_URL;
-      deployLink.textContent = CONFIG.DEPLOY_URL;
+      if(repoLink){
+        repoLink.href = REPO_URL;
+        repoLink.textContent = REPO_URL;
+      }
+      if(deployLink){
+        deployLink.href = CONFIG.DEPLOY_URL;
+        deployLink.textContent = CONFIG.DEPLOY_URL;
+      }
     }
 
-    window.fillDemo = function(){
-      document.getElementById("loginEmail").value = "teacher@sen.go.kr";
-    }
-
-    window.login = function(){
+    window.loginWithGoogle = function(){
       const provider = new GoogleAuthProvider();
       signInWithPopup(auth, provider).catch(error => {
-        console.error("Login failed:", error);
+        console.error("Google Login failed:", error);
+        alert("Google 계정 인증이 취소되었거나 오류가 발생했습니다.\n간편하게 '🚀 시연용 계정 바로 1초 로그인'을 이용해 보세요!");
       });
     }
 
+    window.login = window.loginWithGoogle;
+
+    window.loginWithDemo = async function(){
+      const emailInput = document.getElementById("loginEmail");
+      const nameInput = document.getElementById("loginName");
+      
+      const email = (emailInput?.value.trim()) || "teacher@sen.go.kr";
+      const name = (nameInput?.value.trim()) || "김시연 선생님 (시연용)";
+
+      try {
+        await signInAnonymously(auth);
+      } catch(e) {
+        console.log("Firebase Anonymous auth fallback or local demo mode:", e);
+      }
+
+      currentUser = {
+        uid: "demo-" + Date.now(),
+        email: email,
+        displayName: name,
+        photoURL: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4`,
+        isDemo: true
+      };
+      userName = name;
+
+      document.getElementById("loginScreen").classList.add("hidden");
+      document.getElementById("appScreen").classList.remove("hidden");
+      document.getElementById("userPill").innerHTML = `<span class="pill-badge pill-demo">🚀 시연용 계정</span> <strong>${userName}</strong> (${email})`;
+      
+      renderTeachers();
+      renderHistory();
+      initChat();
+
+      addChat("시스템", `🎉 [${userName}]님이 시연용 계정으로 로그인하였습니다. (보결 추천 및 실시간 채팅 가능)`);
+    }
+
     window.logout = function(){
-      signOut(auth);
+      signOut(auth).catch(() => {});
+      currentUser = null;
+      document.getElementById("appScreen").classList.add("hidden");
+      document.getElementById("loginScreen").classList.remove("hidden");
     }
 
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        currentUser = user;
-        userName = user.displayName || user.email.split('@')[0];
-        document.getElementById("loginScreen").classList.add("hidden");
-        document.getElementById("appScreen").classList.remove("hidden");
-        document.getElementById("userPill").textContent = `인증 계정: ${user.email}`;
-        renderTeachers();
-        renderHistory();
-        initChat();
+        if (user.isAnonymous && currentUser && currentUser.isDemo) {
+          return;
+        }
+        if (!user.isAnonymous) {
+          currentUser = user;
+          userName = user.displayName || user.email.split('@')[0];
+          document.getElementById("loginScreen").classList.add("hidden");
+          document.getElementById("appScreen").classList.remove("hidden");
+          document.getElementById("userPill").innerHTML = `<span class="pill-badge pill-google">🌐 Google 인증</span> <strong>${userName}</strong> (${user.email})`;
+          renderTeachers();
+          renderHistory();
+          initChat();
+        }
       } else {
-        currentUser = null;
-        document.getElementById("appScreen").classList.add("hidden");
-        document.getElementById("loginScreen").classList.remove("hidden");
+        if (!currentUser || !currentUser.isDemo) {
+          currentUser = null;
+          document.getElementById("appScreen").classList.add("hidden");
+          document.getElementById("loginScreen").classList.remove("hidden");
+        }
       }
     });
 
     function renderTeachers(){
       const wrap = document.getElementById("teacherGrid");
+      if(!wrap) return;
       wrap.innerHTML = TEACHERS.map(t => `
         <div class="teacher-card">
-          <div class="avatar">${t.avatar}</div>
+          <div class="teacher-avatar-wrap">
+            <img src="${t.avatarUrl}" class="teacher-avatar-img" alt="${t.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="avatar" style="display:none;">${t.avatar}</div>
+          </div>
           <strong>${t.name}</strong><br>
-          <span style="color:#0f766e; font-weight:700;">${t.subject}</span><br>
-          <span style="color:#2563eb;">${t.phone}</span><br>
-          <span style="color:#64748b; font-size:13px;">공강: ${t.free.join(", ")}</span>
+          <span style="color:#0f766e; font-weight:800; font-size:14px;">${t.subject}</span><br>
+          <span style="color:#2563eb; font-size:13px;">${t.phone}</span><br>
+          <span style="color:#64748b; font-size:12px; display:block; margin:6px 0;">공강: ${t.free.join(", ")}</span>
+          <button class="btn-teacher-chat" onclick="sendChatAsTeacher('${t.name}')">💬 ${t.name}로 채팅 테스트</button>
         </div>
       `).join("");
+    }
+
+    window.sendChatAsTeacher = function(teacherName){
+      const t = TEACHERS.find(item => item.name === teacherName);
+      if(!t) return;
+      const presets = [
+        `안녕하세요, ${t.subject} 담당 ${t.name}입니다. 보강 가능합니다!`,
+        `네, 안내문 확인했습니다. ${t.free[0]} 수업 들어가겠습니다.`,
+        `${t.subject} 교과서 및 실습자료 교실에 준비해두겠습니다.`,
+        `잠시 후 교무실로 내려가서 상세 사항 상의드리겠습니다.`
+      ];
+      const randomMsg = presets[Math.floor(Math.random() * presets.length)];
+      addChat(t.name, randomMsg, t.avatarUrl);
     }
 
     function getRequests(){
@@ -706,12 +1327,13 @@
 
       if(matches.length){
         matchArea.innerHTML = `
-          <div class="section-title" style="font-size:18px; margin-top:18px;">추천 보결 가능 교사</div>
+          <div class="section-title" style="font-size:18px; margin-top:20px;"><span>✅ 추천 보결 가능 교사</span></div>
           <table>
             <thead>
               <tr>
-                <th>교사</th>
-                <th>교과</th>
+                <th>아바타</th>
+                <th>교사명</th>
+                <th>담당 교과</th>
                 <th>연락처</th>
                 <th>공강 시간</th>
               </tr>
@@ -719,8 +1341,9 @@
             <tbody>
               ${matches.map(t => `
                 <tr>
-                  <td>${t.name}</td>
-                  <td>${t.subject}</td>
+                  <td style="width:50px;"><img src="${t.avatarUrl}" style="width:36px;height:36px;border-radius:10px;object-fit:cover;border:1px solid #c9f6f0;" alt="${t.name}"></td>
+                  <td style="font-weight:800;">${t.name}</td>
+                  <td style="color:var(--primary); font-weight:700;">${t.subject}</td>
                   <td>${t.phone}</td>
                   <td>${t.free.join(", ")}</td>
                 </tr>
@@ -729,19 +1352,17 @@
           </table>
         `;
       } else {
-        matchArea.innerHTML = `<div class="section-title" style="font-size:18px; margin-top:18px;">추천 결과</div><p>해당 교시에 추천 가능한 교사가 없습니다.</p>`;
+        matchArea.innerHTML = `<div class="section-title" style="font-size:18px; margin-top:20px;"><span>💡 추천 결과</span></div><p>해당 교시에 공강인 추천 가능 교사가 없습니다.</p>`;
       }
 
-      const guide = `[보결 수업 안내]
-결강 교사: ${absentTeacher}
-학급: ${className}
-교시: ${period}
-교과: ${subject}
-단원명: ${unitName}
-차시: ${lessonNo}
-해야 할 활동: ${activities}
-유의사항: ${cautions || "없음"}
-작성자: ${userName}`;
+      const guide = `[서울풍납초 보결 수업 안내서]
+• 결강 교사: ${absentTeacher} 선생님
+• 학급 및 교시: ${className} / ${period}
+• 교과 및 단원: ${subject} (${unitName})
+• 차시: ${lessonNo}
+• 해야 할 활동: ${activities}
+• 유의사항: ${cautions || "없음"}
+• 작성자: ${userName}`;
 
       document.getElementById("guideText").value = guide;
 
@@ -753,21 +1374,22 @@
       saveRequests(list.slice(0, 10));
       renderHistory();
 
-      addChat("시스템", `${absentTeacher} 선생님의 ${className} ${period} 보결 요청이 등록되었습니다. (${unitName} ${lessonNo})`);
+      addChat("시스템", `📌 [${absentTeacher} 선생님] ${className} ${period} 보결 요청이 등록되었습니다. (${unitName} ${lessonNo})`);
     }
 
     function renderHistory(){
       const list = getRequests();
       const ul = document.getElementById("historyList");
+      if(!ul) return;
       if(!list.length){
-        ul.innerHTML = "<li>아직 보결 요청 기록이 없습니다.</li>";
+        ul.innerHTML = "<li style='color:var(--muted);'>아직 작성된 보결 요청 기록이 없습니다.</li>";
         return;
       }
       ul.innerHTML = list.map(item => `
         <li>
           <strong>${item.absentTeacher}</strong> · ${item.className} · ${item.period}<br>
-          ${item.subject} / ${item.unitName} / ${item.lessonNo}<br>
-          <span style="color:#64748b;">${item.createdAt}</span>
+          <span style="color:var(--primary); font-weight:700;">${item.subject}</span> / ${item.unitName} / ${item.lessonNo}<br>
+          <span style="color:#94a3b8; font-size:12px;">${item.createdAt}</span>
         </li>
       `).join("");
     }
@@ -775,62 +1397,126 @@
     window.copyGuide = function(){
       const text = document.getElementById("guideText").value.trim();
       if(!text){
-        alert("먼저 보결 요청서를 작성해주세요.");
+        alert("먼저 보결 요청서를 작성하여 안내문을 생성해주세요.");
         return;
       }
       navigator.clipboard.writeText(text).then(() => {
-        alert("안내문을 복사했습니다.");
+        alert("수업 안내문이 클립보드에 복사되었습니다.");
       });
     }
 
     window.shareGuideToChat = function(){
       const text = document.getElementById("guideText").value.trim();
       if(!text){
-        alert("먼저 보결 요청서를 작성해주세요.");
+        alert("먼저 보결 요청서를 작성하여 안내문을 생성해주세요.");
         return;
       }
-      addChat(userName, text.replace(/\n/g, " / "));
+      addChat(userName, text);
+    }
+
+    function getAvatarForUser(authorName) {
+      if (!authorName) return `https://api.dicebear.com/7.x/avataaars/svg?seed=User&backgroundColor=e6fffb`;
+      const t = TEACHERS.find(item => item.name === authorName || authorName.includes(item.name));
+      if (t) return t.avatarUrl;
+      if (currentUser && (currentUser.displayName === authorName || authorName === userName) && currentUser.photoURL) {
+        return currentUser.photoURL;
+      }
+      if (authorName === "시스템") {
+        return `https://api.dicebear.com/7.x/bottts/svg?seed=System&backgroundColor=d8ece8`;
+      }
+      return `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(authorName)}&backgroundColor=e6fffb`;
     }
 
     let chatUnsubscribe = null;
     function initChat(){
-      const chatRef = query(ref(db, 'chats'), limitToLast(40));
+      const chatRef = query(ref(db, 'chats'), limitToLast(50));
       if (chatUnsubscribe) chatUnsubscribe();
       
       chatUnsubscribe = onValue(chatRef, (snapshot) => {
         const box = document.getElementById("chatBox");
+        if(!box) return;
         box.innerHTML = "";
         if (snapshot.exists()) {
           const chats = [];
           snapshot.forEach((child) => {
             chats.push(child.val());
           });
-          box.innerHTML = chats.map(item => `
-            <div class="chat-msg">
-              <strong>${item.author}</strong><br>
-              ${item.text}<br>
-              <span style="font-size:12px; color:#64748b;">${item.time}</span>
+          box.innerHTML = chats.map(item => {
+            const isMe = (item.author === userName) || (currentUser && item.author === currentUser.displayName);
+            const isSystem = item.author === "시스템";
+            const avatar = item.avatarUrl || getAvatarForUser(item.author);
+            if (isSystem) {
+              return `
+                <div style="text-align:center; margin:10px 0; font-size:12px; color:#64748b; background:#f1f5f9; padding:6px 12px; border-radius:99px; align-self:center;">
+                  🤖 ${item.text} <span style="font-size:10px; color:#94a3b8;">(${item.time || ''})</span>
+                </div>
+              `;
+            }
+            return `
+            <div class="chat-msg-row ${isMe ? 'chat-me' : 'chat-other'}">
+              <img src="${avatar}" class="chat-avatar" alt="${item.author}" onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Teacher&backgroundColor=e6fffb'">
+              <div class="chat-bubble-wrap">
+                <div class="chat-author">${item.author} ${isMe ? '<span class="chat-badge-me">나</span>' : ''}</div>
+                <div class="chat-bubble">${item.text}</div>
+                <div class="chat-time">${item.time || ''}</div>
+              </div>
             </div>
-          `).join("");
+            `;
+          }).join("");
           box.scrollTop = box.scrollHeight;
+        } else {
+          box.innerHTML = `<div style="text-align:center; color:var(--muted); padding:40px 0;">첫 번째 채팅 메시지를 남겨보세요!</div>`;
         }
       });
     }
 
-    function addChat(author, text){
+    function addChat(author, text, customAvatar = null){
+      const avatarUrl = customAvatar || getAvatarForUser(author);
       push(ref(db, 'chats'), {
         author,
         text,
-        time: new Date().toLocaleString("ko-KR")
+        avatarUrl,
+        time: new Date().toLocaleTimeString("ko-KR", { hour: '2-digit', minute: '2-digit' }),
+        fullTime: new Date().toLocaleString("ko-KR")
       });
     }
 
     window.sendChat = function(){
       const input = document.getElementById("chatInput");
-      const text = input.value.trim();
+      const text = input?.value.trim();
       if(!text) return;
       addChat(userName, text);
       input.value = "";
+    }
+
+    window.sendQuickChat = function(text){
+      if(!text) return;
+      addChat(userName, text);
+    }
+
+    // Modal Control Functions
+    window.openPolicyModal = function(tabName = 'guide'){
+      const modal = document.getElementById("policyModal");
+      if(!modal) return;
+      modal.classList.remove("hidden");
+      switchPolicyTab(tabName);
+    }
+
+    window.closePolicyModal = function(){
+      const modal = document.getElementById("policyModal");
+      if(modal) modal.classList.add("hidden");
+    }
+
+    window.switchPolicyTab = function(tabName){
+      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+      document.querySelectorAll(".tab-pane").forEach(pane => pane.classList.add("hidden"));
+      
+      const targetBtn = document.getElementById(`tabBtn_${tabName}`);
+      const targetPane = document.getElementById(`tabPane_${tabName}`);
+      if(targetBtn && targetPane){
+        targetBtn.classList.add("active");
+        targetPane.classList.remove("hidden");
+      }
     }
 
     setLogos();

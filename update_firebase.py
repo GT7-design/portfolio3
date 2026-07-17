@@ -1,4 +1,3 @@
-import re
 import os
 
 file_path = r'c:\Users\cheou\Desktop\portfolio3-1\index.html'
@@ -6,11 +5,9 @@ file_path = r'c:\Users\cheou\Desktop\portfolio3-1\index.html'
 with open(file_path, 'r', encoding='utf-8') as f:
     content = f.read()
 
-# Find the start of the <script> tag that defines CONFIG (around line 567)
-# We will replace everything from this <script> to the end of the file.
-script_start_idx = content.find('<script>\n    const CONFIG = {')
+script_start_idx = content.find('<script type="module">')
 if script_start_idx == -1:
-    script_start_idx = content.find('<script>\r\n    const CONFIG = {')
+    script_start_idx = content.find('<script>\n    const CONFIG = {')
 
 if script_start_idx == -1:
     print("Could not find the target <script> tag.")
@@ -18,9 +15,9 @@ if script_start_idx == -1:
 
 html_top = content[:script_start_idx]
 
-new_script = """  <script type="module">
+new_script = """<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signInAnonymously, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getDatabase, ref, push, onValue, query, limitToLast } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
     const firebaseConfig = {
@@ -54,72 +51,139 @@ new_script = """  <script type="module">
     const REQUEST_KEY = "pungnap_portfolio3_requests";
 
     const TEACHERS = [
-      { name:"김수학", phone:"010-1111-2201", subject:"수학", free:["2교시","4교시"], avatar:"김" },
-      { name:"박국어", phone:"010-1111-2202", subject:"국어", free:["1교시","3교시"], avatar:"박" },
-      { name:"최과학", phone:"010-1111-2203", subject:"과학", free:["2교시","5교시"], avatar:"최" },
-      { name:"이사회", phone:"010-1111-2204", subject:"사회", free:["3교시","4교시"], avatar:"이" },
-      { name:"정영어", phone:"010-1111-2205", subject:"영어", free:["1교시","6교시"], avatar:"정" },
-      { name:"한창체", phone:"010-1111-2206", subject:"창체", free:["2교시","6교시"], avatar:"한" }
+      { name:"김수학", phone:"010-1111-2201", subject:"수학", free:["2교시","4교시"], avatar:"김", avatarUrl:"https://api.dicebear.com/7.x/avataaars/svg?seed=TeacherMathKim&backgroundColor=b6e3f4" },
+      { name:"박국어", phone:"010-1111-2202", subject:"국어", free:["1교시","3교시"], avatar:"박", avatarUrl:"https://api.dicebear.com/7.x/avataaars/svg?seed=TeacherKoreanPark&backgroundColor=c0aede" },
+      { name:"최과학", phone:"010-1111-2203", subject:"과학", free:["2교시","5교시"], avatar:"최", avatarUrl:"https://api.dicebear.com/7.x/avataaars/svg?seed=TeacherScienceChoi&backgroundColor=d1d4f9" },
+      { name:"이사회", phone:"010-1111-2204", subject:"사회", free:["3교시","4교시"], avatar:"이", avatarUrl:"https://api.dicebear.com/7.x/avataaars/svg?seed=TeacherSocialLee&backgroundColor=ffd5dc" },
+      { name:"정영어", phone:"010-1111-2205", subject:"영어", free:["1교시","6교시"], avatar:"정", avatarUrl:"https://api.dicebear.com/7.x/avataaars/svg?seed=TeacherEnglishJung&backgroundColor=ffdfbf" },
+      { name:"한창체", phone:"010-1111-2206", subject:"창체", free:["2교시","6교시"], avatar:"한", avatarUrl:"https://api.dicebear.com/7.x/avataaars/svg?seed=TeacherCreativeHan&backgroundColor=c6f6d5" }
     ];
 
     function setLogos(){
-      document.getElementById("loginLogo").src = CONFIG.LOGO_URL;
-      document.getElementById("brandLogo").src = CONFIG.LOGO_URL;
-      document.getElementById("heroLogo").src = CONFIG.LOGO_URL;
+      const l1 = document.getElementById("loginLogo");
+      const l2 = document.getElementById("brandLogo");
+      const l3 = document.getElementById("heroLogo");
+      if(l1) l1.src = CONFIG.LOGO_URL;
+      if(l2) l2.src = CONFIG.LOGO_URL;
+      if(l3) l3.src = CONFIG.LOGO_URL;
     }
 
     function setLinks(){
       const repoLink = document.getElementById("repoLink");
       const deployLink = document.getElementById("deployLink");
-      repoLink.href = REPO_URL;
-      repoLink.textContent = REPO_URL;
-      deployLink.href = CONFIG.DEPLOY_URL;
-      deployLink.textContent = CONFIG.DEPLOY_URL;
+      if(repoLink){
+        repoLink.href = REPO_URL;
+        repoLink.textContent = REPO_URL;
+      }
+      if(deployLink){
+        deployLink.href = CONFIG.DEPLOY_URL;
+        deployLink.textContent = CONFIG.DEPLOY_URL;
+      }
     }
 
-    window.fillDemo = function(){
-      document.getElementById("loginEmail").value = "teacher@sen.go.kr";
-    }
-
-    window.login = function(){
+    window.loginWithGoogle = function(){
       const provider = new GoogleAuthProvider();
       signInWithPopup(auth, provider).catch(error => {
-        console.error("Login failed:", error);
+        console.error("Google Login failed:", error);
+        alert("Google 계정 인증이 취소되었거나 오류가 발생했습니다.\\n간편하게 '🚀 시연용 계정 바로 1초 로그인'을 이용해 보세요!");
       });
     }
 
+    window.login = window.loginWithGoogle;
+
+    window.loginWithDemo = async function(){
+      const emailInput = document.getElementById("loginEmail");
+      const nameInput = document.getElementById("loginName");
+      
+      const email = (emailInput?.value.trim()) || "teacher@sen.go.kr";
+      const name = (nameInput?.value.trim()) || "김시연 선생님 (시연용)";
+
+      try {
+        await signInAnonymously(auth);
+      } catch(e) {
+        console.log("Firebase Anonymous auth fallback or local demo mode:", e);
+      }
+
+      currentUser = {
+        uid: "demo-" + Date.now(),
+        email: email,
+        displayName: name,
+        photoURL: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4`,
+        isDemo: true
+      };
+      userName = name;
+
+      document.getElementById("loginScreen").classList.add("hidden");
+      document.getElementById("appScreen").classList.remove("hidden");
+      document.getElementById("userPill").innerHTML = `<span class="pill-badge pill-demo">🚀 시연용 계정</span> <strong>${userName}</strong> (${email})`;
+      
+      renderTeachers();
+      renderHistory();
+      initChat();
+
+      addChat("시스템", `🎉 [${userName}]님이 시연용 계정으로 로그인하였습니다. (보결 추천 및 실시간 채팅 가능)`);
+    }
+
     window.logout = function(){
-      signOut(auth);
+      signOut(auth).catch(() => {});
+      currentUser = null;
+      document.getElementById("appScreen").classList.add("hidden");
+      document.getElementById("loginScreen").classList.remove("hidden");
     }
 
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        currentUser = user;
-        userName = user.displayName || user.email.split('@')[0];
-        document.getElementById("loginScreen").classList.add("hidden");
-        document.getElementById("appScreen").classList.remove("hidden");
-        document.getElementById("userPill").textContent = `인증 계정: ${user.email}`;
-        renderTeachers();
-        renderHistory();
-        initChat();
+        if (user.isAnonymous && currentUser && currentUser.isDemo) {
+          return;
+        }
+        if (!user.isAnonymous) {
+          currentUser = user;
+          userName = user.displayName || user.email.split('@')[0];
+          document.getElementById("loginScreen").classList.add("hidden");
+          document.getElementById("appScreen").classList.remove("hidden");
+          document.getElementById("userPill").innerHTML = `<span class="pill-badge pill-google">🌐 Google 인증</span> <strong>${userName}</strong> (${user.email})`;
+          renderTeachers();
+          renderHistory();
+          initChat();
+        }
       } else {
-        currentUser = null;
-        document.getElementById("appScreen").classList.add("hidden");
-        document.getElementById("loginScreen").classList.remove("hidden");
+        if (!currentUser || !currentUser.isDemo) {
+          currentUser = null;
+          document.getElementById("appScreen").classList.add("hidden");
+          document.getElementById("loginScreen").classList.remove("hidden");
+        }
       }
     });
 
     function renderTeachers(){
       const wrap = document.getElementById("teacherGrid");
+      if(!wrap) return;
       wrap.innerHTML = TEACHERS.map(t => `
         <div class="teacher-card">
-          <div class="avatar">${t.avatar}</div>
+          <div class="teacher-avatar-wrap">
+            <img src="${t.avatarUrl}" class="teacher-avatar-img" alt="${t.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="avatar" style="display:none;">${t.avatar}</div>
+          </div>
           <strong>${t.name}</strong><br>
-          <span style="color:#0f766e; font-weight:700;">${t.subject}</span><br>
-          <span style="color:#2563eb;">${t.phone}</span><br>
-          <span style="color:#64748b; font-size:13px;">공강: ${t.free.join(", ")}</span>
+          <span style="color:#0f766e; font-weight:800; font-size:14px;">${t.subject}</span><br>
+          <span style="color:#2563eb; font-size:13px;">${t.phone}</span><br>
+          <span style="color:#64748b; font-size:12px; display:block; margin:6px 0;">공강: ${t.free.join(", ")}</span>
+          <button class="btn-teacher-chat" onclick="sendChatAsTeacher('${t.name}')">💬 ${t.name}로 채팅 테스트</button>
         </div>
       `).join("");
+    }
+
+    window.sendChatAsTeacher = function(teacherName){
+      const t = TEACHERS.find(item => item.name === teacherName);
+      if(!t) return;
+      const presets = [
+        `안녕하세요, ${t.subject} 담당 ${t.name}입니다. 보강 가능합니다!`,
+        `네, 안내문 확인했습니다. ${t.free[0]} 수업 들어가겠습니다.`,
+        `${t.subject} 교과서 및 실습자료 교실에 준비해두겠습니다.`,
+        `잠시 후 교무실로 내려가서 상세 사항 상의드리겠습니다.`
+      ];
+      const randomMsg = presets[Math.floor(Math.random() * presets.length)];
+      addChat(t.name, randomMsg, t.avatarUrl);
     }
 
     function getRequests(){
@@ -160,12 +224,13 @@ new_script = """  <script type="module">
 
       if(matches.length){
         matchArea.innerHTML = `
-          <div class="section-title" style="font-size:18px; margin-top:18px;">추천 보결 가능 교사</div>
+          <div class="section-title" style="font-size:18px; margin-top:20px;"><span>✅ 추천 보결 가능 교사</span></div>
           <table>
             <thead>
               <tr>
-                <th>교사</th>
-                <th>교과</th>
+                <th>아바타</th>
+                <th>교사명</th>
+                <th>담당 교과</th>
                 <th>연락처</th>
                 <th>공강 시간</th>
               </tr>
@@ -173,8 +238,9 @@ new_script = """  <script type="module">
             <tbody>
               ${matches.map(t => `
                 <tr>
-                  <td>${t.name}</td>
-                  <td>${t.subject}</td>
+                  <td style="width:50px;"><img src="${t.avatarUrl}" style="width:36px;height:36px;border-radius:10px;object-fit:cover;border:1px solid #c9f6f0;" alt="${t.name}"></td>
+                  <td style="font-weight:800;">${t.name}</td>
+                  <td style="color:var(--primary); font-weight:700;">${t.subject}</td>
                   <td>${t.phone}</td>
                   <td>${t.free.join(", ")}</td>
                 </tr>
@@ -183,19 +249,17 @@ new_script = """  <script type="module">
           </table>
         `;
       } else {
-        matchArea.innerHTML = `<div class="section-title" style="font-size:18px; margin-top:18px;">추천 결과</div><p>해당 교시에 추천 가능한 교사가 없습니다.</p>`;
+        matchArea.innerHTML = `<div class="section-title" style="font-size:18px; margin-top:20px;"><span>💡 추천 결과</span></div><p>해당 교시에 공강인 추천 가능 교사가 없습니다.</p>`;
       }
 
-      const guide = `[보결 수업 안내]
-결강 교사: ${absentTeacher}
-학급: ${className}
-교시: ${period}
-교과: ${subject}
-단원명: ${unitName}
-차시: ${lessonNo}
-해야 할 활동: ${activities}
-유의사항: ${cautions || "없음"}
-작성자: ${userName}`;
+      const guide = `[서울풍납초 보결 수업 안내서]
+• 결강 교사: ${absentTeacher} 선생님
+• 학급 및 교시: ${className} / ${period}
+• 교과 및 단원: ${subject} (${unitName})
+• 차시: ${lessonNo}
+• 해야 할 활동: ${activities}
+• 유의사항: ${cautions || "없음"}
+• 작성자: ${userName}`;
 
       document.getElementById("guideText").value = guide;
 
@@ -207,21 +271,22 @@ new_script = """  <script type="module">
       saveRequests(list.slice(0, 10));
       renderHistory();
 
-      addChat("시스템", `${absentTeacher} 선생님의 ${className} ${period} 보결 요청이 등록되었습니다. (${unitName} ${lessonNo})`);
+      addChat("시스템", `📌 [${absentTeacher} 선생님] ${className} ${period} 보결 요청이 등록되었습니다. (${unitName} ${lessonNo})`);
     }
 
     function renderHistory(){
       const list = getRequests();
       const ul = document.getElementById("historyList");
+      if(!ul) return;
       if(!list.length){
-        ul.innerHTML = "<li>아직 보결 요청 기록이 없습니다.</li>";
+        ul.innerHTML = "<li style='color:var(--muted);'>아직 작성된 보결 요청 기록이 없습니다.</li>";
         return;
       }
       ul.innerHTML = list.map(item => `
         <li>
           <strong>${item.absentTeacher}</strong> · ${item.className} · ${item.period}<br>
-          ${item.subject} / ${item.unitName} / ${item.lessonNo}<br>
-          <span style="color:#64748b;">${item.createdAt}</span>
+          <span style="color:var(--primary); font-weight:700;">${item.subject}</span> / ${item.unitName} / ${item.lessonNo}<br>
+          <span style="color:#94a3b8; font-size:12px;">${item.createdAt}</span>
         </li>
       `).join("");
     }
@@ -229,62 +294,126 @@ new_script = """  <script type="module">
     window.copyGuide = function(){
       const text = document.getElementById("guideText").value.trim();
       if(!text){
-        alert("먼저 보결 요청서를 작성해주세요.");
+        alert("먼저 보결 요청서를 작성하여 안내문을 생성해주세요.");
         return;
       }
       navigator.clipboard.writeText(text).then(() => {
-        alert("안내문을 복사했습니다.");
+        alert("수업 안내문이 클립보드에 복사되었습니다.");
       });
     }
 
     window.shareGuideToChat = function(){
       const text = document.getElementById("guideText").value.trim();
       if(!text){
-        alert("먼저 보결 요청서를 작성해주세요.");
+        alert("먼저 보결 요청서를 작성하여 안내문을 생성해주세요.");
         return;
       }
-      addChat(userName, text.replace(/\\n/g, " / "));
+      addChat(userName, text);
+    }
+
+    function getAvatarForUser(authorName) {
+      if (!authorName) return `https://api.dicebear.com/7.x/avataaars/svg?seed=User&backgroundColor=e6fffb`;
+      const t = TEACHERS.find(item => item.name === authorName || authorName.includes(item.name));
+      if (t) return t.avatarUrl;
+      if (currentUser && (currentUser.displayName === authorName || authorName === userName) && currentUser.photoURL) {
+        return currentUser.photoURL;
+      }
+      if (authorName === "시스템") {
+        return `https://api.dicebear.com/7.x/bottts/svg?seed=System&backgroundColor=d8ece8`;
+      }
+      return `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(authorName)}&backgroundColor=e6fffb`;
     }
 
     let chatUnsubscribe = null;
     function initChat(){
-      const chatRef = query(ref(db, 'chats'), limitToLast(40));
+      const chatRef = query(ref(db, 'chats'), limitToLast(50));
       if (chatUnsubscribe) chatUnsubscribe();
       
       chatUnsubscribe = onValue(chatRef, (snapshot) => {
         const box = document.getElementById("chatBox");
+        if(!box) return;
         box.innerHTML = "";
         if (snapshot.exists()) {
           const chats = [];
           snapshot.forEach((child) => {
             chats.push(child.val());
           });
-          box.innerHTML = chats.map(item => `
-            <div class="chat-msg">
-              <strong>${item.author}</strong><br>
-              ${item.text}<br>
-              <span style="font-size:12px; color:#64748b;">${item.time}</span>
+          box.innerHTML = chats.map(item => {
+            const isMe = (item.author === userName) || (currentUser && item.author === currentUser.displayName);
+            const isSystem = item.author === "시스템";
+            const avatar = item.avatarUrl || getAvatarForUser(item.author);
+            if (isSystem) {
+              return `
+                <div style="text-align:center; margin:10px 0; font-size:12px; color:#64748b; background:#f1f5f9; padding:6px 12px; border-radius:99px; align-self:center;">
+                  🤖 ${item.text} <span style="font-size:10px; color:#94a3b8;">(${item.time || ''})</span>
+                </div>
+              `;
+            }
+            return `
+            <div class="chat-msg-row ${isMe ? 'chat-me' : 'chat-other'}">
+              <img src="${avatar}" class="chat-avatar" alt="${item.author}" onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Teacher&backgroundColor=e6fffb'">
+              <div class="chat-bubble-wrap">
+                <div class="chat-author">${item.author} ${isMe ? '<span class="chat-badge-me">나</span>' : ''}</div>
+                <div class="chat-bubble">${item.text}</div>
+                <div class="chat-time">${item.time || ''}</div>
+              </div>
             </div>
-          `).join("");
+            `;
+          }).join("");
           box.scrollTop = box.scrollHeight;
+        } else {
+          box.innerHTML = `<div style="text-align:center; color:var(--muted); padding:40px 0;">첫 번째 채팅 메시지를 남겨보세요!</div>`;
         }
       });
     }
 
-    function addChat(author, text){
+    function addChat(author, text, customAvatar = null){
+      const avatarUrl = customAvatar || getAvatarForUser(author);
       push(ref(db, 'chats'), {
         author,
         text,
-        time: new Date().toLocaleString("ko-KR")
+        avatarUrl,
+        time: new Date().toLocaleTimeString("ko-KR", { hour: '2-digit', minute: '2-digit' }),
+        fullTime: new Date().toLocaleString("ko-KR")
       });
     }
 
     window.sendChat = function(){
       const input = document.getElementById("chatInput");
-      const text = input.value.trim();
+      const text = input?.value.trim();
       if(!text) return;
       addChat(userName, text);
       input.value = "";
+    }
+
+    window.sendQuickChat = function(text){
+      if(!text) return;
+      addChat(userName, text);
+    }
+
+    // Modal Control Functions
+    window.openPolicyModal = function(tabName = 'guide'){
+      const modal = document.getElementById("policyModal");
+      if(!modal) return;
+      modal.classList.remove("hidden");
+      switchPolicyTab(tabName);
+    }
+
+    window.closePolicyModal = function(){
+      const modal = document.getElementById("policyModal");
+      if(modal) modal.classList.add("hidden");
+    }
+
+    window.switchPolicyTab = function(tabName){
+      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+      document.querySelectorAll(".tab-pane").forEach(pane => pane.classList.add("hidden"));
+      
+      const targetBtn = document.getElementById(`tabBtn_${tabName}`);
+      const targetPane = document.getElementById(`tabPane_${tabName}`);
+      if(targetBtn && targetPane){
+        targetBtn.classList.add("active");
+        targetPane.classList.remove("hidden");
+      }
     }
 
     setLogos();
