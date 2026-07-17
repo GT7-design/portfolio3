@@ -1118,33 +1118,17 @@
     </div>
   </div>
 
-  <!-- [즉시 실행 동기 보완 스크립트] 로고 및 즉시 시연 로그인이 로컬/CDN 로딩 전에도 100% 작동하도록 보완 -->
+  <!-- [즉시 실행 동기 보완 스크립트] 로고 원본 반영 및 즉시 시연 로그인이 로컬/CDN 로딩 전에도 100% 작동하도록 보완 -->
   <script>
-    window.PUNGNAP_LOGO_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-      <defs>
-        <radialGradient id="pg" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#ff66cc"/>
-          <stop offset="100%" stop-color="#ff1493"/>
-        </radialGradient>
-      </defs>
-      <!-- 꽃잎 테두리 (노란색/연두색 아웃라인과 핑크색 무궁화/꽃잎 형상) -->
-      <path d="M100,6 C126,6 146,26 146,46 C166,31 196,46 196,76 C196,102 181,122 191,146 C186,176 156,191 131,176 C116,196 86,196 71,176 C46,191 16,176 11,146 C21,122 6,102 6,76 C6,46 36,31 56,46 C56,26 76,6 100,6 Z" fill="url(#pg)" stroke="#ffee00" stroke-width="6" stroke-linejoin="round"/>
-      <!-- 안쪽 다크 마룬 코어 원형 -->
-      <circle cx="100" cy="100" r="63" fill="#4a0628" stroke="#ffee00" stroke-width="5"/>
-      <!-- 안쪽 5꽃잎 실선 -->
-      <path d="M100,45 Q115,65 135,55 Q125,80 150,90 Q125,105 135,130 Q110,120 100,145 Q90,120 65,130 Q75,105 50,90 Q75,80 65,55 Q85,65 100,45 Z" fill="none" stroke="#ffee00" stroke-width="2.5"/>
-      <!-- 풍납 글씨 -->
-      <text x="100" y="93" font-size="28" font-weight="900" text-anchor="middle" fill="#ffee00" font-family="'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif">풍</text>
-      <text x="100" y="127" font-size="28" font-weight="900" text-anchor="middle" fill="#ffee00" font-family="'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif">납</text>
-    </svg>`);
+    window.PUNGNAP_LOGO_URL = "logo.png";
 
     window.addEventListener("DOMContentLoaded", function() {
       const l1 = document.getElementById("loginLogo");
       const l2 = document.getElementById("brandLogo");
       const l3 = document.getElementById("heroLogo");
-      if (l1) l1.src = window.PUNGNAP_LOGO_SVG;
-      if (l2) l2.src = window.PUNGNAP_LOGO_SVG;
-      if (l3) l3.src = window.PUNGNAP_LOGO_SVG;
+      if (l1) l1.src = window.PUNGNAP_LOGO_URL;
+      if (l2) l2.src = window.PUNGNAP_LOGO_URL;
+      if (l3) l3.src = window.PUNGNAP_LOGO_URL;
     });
 
     window.loginWithDemo = function() {
@@ -1160,8 +1144,22 @@
       if (pill) pill.innerHTML = `<span class="pill-badge pill-demo">🚀 시연용 계정</span> <strong>${name}</strong> (${email})`;
     };
 
+    window.logout = async function() {
+      const ls = document.getElementById("loginScreen");
+      const as = document.getElementById("appScreen");
+      if (as) as.classList.add("hidden");
+      if (ls) ls.classList.remove("hidden");
+      if (typeof window.firebaseSignOut === "function") {
+        try { await window.firebaseSignOut(); } catch(e) { console.warn(e); }
+      }
+    };
+
     window.loginWithGoogle = function() {
-      window.loginWithDemo();
+      if (typeof window.firebaseLoginWithGoogle === "function") {
+        window.firebaseLoginWithGoogle();
+      } else {
+        alert("현재 환경(로컬 file:// 또는 네트워크 지연)에서는 구글 로그인 모듈을 불러올 수 없습니다.\n\n간편 체험을 원하시면 아래의 '🚀 시연용 계정 바로 1초 로그인'을 클릭해 주세요.");
+      }
     };
     window.login = window.loginWithGoogle;
   </script>
@@ -1191,7 +1189,7 @@
     const CONFIG = {
       SCHOOL: "서울풍납초등학교",
       AUTHOR: "교사 김규태",
-      LOGO_URL: window.PUNGNAP_LOGO_SVG,
+      LOGO_URL: window.PUNGNAP_LOGO_URL || "logo.png",
       GITHUB_USER: "GT7-design",
       REPO_NAME: "portfolio3",
       DEPLOY_URL: "https://portfolio3-five-dusky.vercel.app/",
@@ -1232,14 +1230,19 @@
       }
     }
 
-    window.loginWithGoogle = function(){
+    window.firebaseLoginWithGoogle = function(){
       const provider = new GoogleAuthProvider();
       signInWithPopup(auth, provider).catch(error => {
         console.warn("Google Login failed/Local file mode:", error);
-        alert("현재 접속 환경(로컬/미허용 도메인)에서 구글 팝업 로그인이 제한되어, 즉시 '시연용 계정'으로 자동 입장합니다.");
-        window.loginWithDemo();
+        alert("구글 계정 로그인 중 오류가 발생했습니다. (" + (error.message || error) + ")\n\n※ 로컬(file://) 실행이나 미허용 도메인 환경에서는 구글 팝업 인증이 차단될 수 있습니다. 간편 체험을 원하시면 '🚀 시연용 계정 바로 1초 로그인'을 클릭해 주세요.");
       });
-    }
+    };
+
+    window.firebaseSignOut = async function() {
+      if (auth.currentUser) {
+        await signOut(auth);
+      }
+    };
 
     window.login = window.loginWithGoogle;
 
